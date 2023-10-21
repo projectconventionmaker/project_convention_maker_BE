@@ -4,6 +4,7 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.Mockito.mock;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -131,6 +132,119 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
                                         .requestSchema(Schema.schema("CreateProjectRequest"))
                                         .responseSchema(Schema.schema("CreateProjectResponse"))
                                         .requestFields(requestFieldDescription)
+                                        .responseFields(responseFieldDescription)
+                                        .build())));
+    }
+
+    @Test
+    @DisplayName("조회: 프로젝트 조회")
+    void getProject_restDocs() throws Exception {
+        //given
+        ProjectEntity projectEntity = ProjectEntity.builder()
+                .projectName(PROJECT_NAME)
+                .teamName(TEAM_NAME)
+                .projectUUID(PROJECT_UUID)
+                .detail(PROJECT_DETAIL)
+                .introduction(PROJECT_INTRODUCTION)
+                .build();
+
+        List<CodeConventionItem> codeConventionItems = new ArrayList<>();
+        codeConventionItems.add(new CodeConventionItem("클래스명은 ~로 한다"));
+        codeConventionItems.add(new CodeConventionItem("테스트 메서드명은 ~로 한다"));
+        codeConventionItems.add(new CodeConventionItem("어노테이션명은 ~로 한다"));
+
+        List<CommitConventionItem> commitConventionItems = new ArrayList<>();
+        commitConventionItems.add(new CommitConventionItem("[feat]: 기능 추가,삭제, 변경", true));
+        commitConventionItems.add(new CommitConventionItem("[fix]: 버그,오류 수정", true));
+        commitConventionItems.add(new CommitConventionItem("[refactor]: 코드 리팩토링:", true));
+
+        List<Framework> frameworks = new ArrayList<>();
+        frameworks.add(new Framework("Spring"));
+        frameworks.add(new Framework("FastAPI"));
+        frameworks.add(new Framework("Django"));
+
+        List<Style> styles = new ArrayList<>();
+        styles.add(new Style("Bootstrap"));
+
+        List<ProgrammingLanguage> languages = new ArrayList<>();
+        languages.add(new ProgrammingLanguage("Java"));
+        languages.add(new ProgrammingLanguage("Kotlin"));
+        languages.add(new ProgrammingLanguage("Golang"));
+
+        List<GroundRuleItem> items = new ArrayList<>();
+        items.add(new GroundRuleItem("님 금지! 극 존대 금지!", true));
+        items.add(new GroundRuleItem("ZEP에서 캠은 켜지 않을 거에요", false));
+        items.add(new GroundRuleItem("스프린트는 협업과 프로세스를 배우는 시간이지 포트폴리오나 사이드 프로젝트를 하는 시간이 아닙니다", true));
+
+        ProjectDTO response = ProjectDTO.builder()
+                .projectDetail(ProjectDetail.of(projectEntity))
+                .techStack(TechStack.of(languages, frameworks, styles))
+                .groundRule(GroundRule.of(items))
+                .codeConvention(CodeConvention.of(codeConventionItems))
+                .commitConvention(CommitConvention.of(commitConventionItems))
+                .build();
+
+        BDDMockito.given(projectService.getProject(PROJECT_UUID))
+                .willReturn(response);
+
+        var parameterDescriptors = new ParameterDescriptor[]{
+                parameterWithName("projectUUID").description("(Required) UUID")
+        };
+
+        String identifier = "get-v1-get-project";
+        String summary = "프로젝트 조회 API";
+        String description = """
+                - 존재하지 않는 프로젝트 UUID로 요청시 1000 에러 코드
+                """;
+
+        var responseFieldDescription = new FieldDescriptor[]{
+                fieldWithPath("project_detail").type(OBJECT).description("이름"),
+                fieldWithPath("project_detail.project_name").type(STRING).description("프로젝트명"),
+                fieldWithPath("project_detail.project_uuid").type(STRING).description("UUID"),
+                fieldWithPath("project_detail.team_name").type(STRING).description("팀명"),
+                fieldWithPath("project_detail.introduction").type(STRING).description("프로젝트 한 줄 소개"),
+                fieldWithPath("project_detail.detail").type(STRING).description("프로젝트 상세"),
+                fieldWithPath("tech_stack").type(OBJECT).description("기술 스택"),
+                fieldWithPath("tech_stack.languages").type(ARRAY).description("언어"),
+                fieldWithPath("tech_stack.languages[].name").type(STRING).description("언어 이름"),
+                fieldWithPath("tech_stack.frameworks").type(ARRAY).description("프레임워크"),
+                fieldWithPath("tech_stack.frameworks[].name").type(STRING).description("프레임워크 이름"),
+                fieldWithPath("tech_stack.styles").type(ARRAY).description("스타일"),
+                fieldWithPath("tech_stack.styles[].name").type(STRING).description("스타일 이름"),
+                fieldWithPath("ground_rule").type(OBJECT).description("그라운드 룰"),
+                fieldWithPath("ground_rule.items").type(ARRAY).description("그라운드 룰 항목 리스트"),
+                fieldWithPath("ground_rule.items[].name").type(STRING).description("항목 이름"),
+                fieldWithPath("ground_rule.items[].checked").type(BOOLEAN).description("항목이 채택되었는지"),
+                fieldWithPath("commit_convention").type(OBJECT).description("커밋 컨벤션"),
+                fieldWithPath("commit_convention.items").type(ARRAY).description("커밋 컨벤션 항목 리스트"),
+                fieldWithPath("commit_convention.items[].name").type(STRING).description("항목 이름"),
+                fieldWithPath("commit_convention.items[].checked").type(BOOLEAN).description("항목이 채택되었는지"),
+                fieldWithPath("code_convention").type(OBJECT).description("코드 컨벤션"),
+                fieldWithPath("code_convention.items").type(ARRAY).description("코드 컨벤션 항목 리스트"),
+                fieldWithPath("code_convention.items[].name").type(STRING).description("항목 이름")
+        };
+
+        //when //then
+        mockMvc.perform(
+                        get("/api/v1/projects/{projectUUID}", PROJECT_UUID))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document(identifier,
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())
+                ))
+                .andDo(
+                        MockMvcRestDocumentationWrapper.document(
+                                identifier,
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag(PROJECT_TAG)
+                                        .description(description)
+                                        .summary(summary)
+                                        .requestSchema(Schema.schema("GetProjectRequest"))
+                                        .responseSchema(Schema.schema("GetProjectResponse"))
+                                        .pathParameters(parameterDescriptors)
                                         .responseFields(responseFieldDescription)
                                         .build())));
     }

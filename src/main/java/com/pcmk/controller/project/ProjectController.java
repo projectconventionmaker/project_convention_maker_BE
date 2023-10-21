@@ -25,14 +25,14 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    @GetMapping("/{projectUUID}")
-    public ProjectDTO getProject(@PathVariable String projectUUID) {
-        return projectService.getProject(projectUUID);
-    }
-
     @PostMapping
     public ProjectDTO createProject(@RequestBody @Validated ProjectCreateRequestDTO projectCreateRequestDTO) {
         return projectService.createProject(projectCreateRequestDTO.getProjectName());
+    }
+
+    @GetMapping("/{projectUUID}")
+    public ProjectDTO getProject(@PathVariable String projectUUID) {
+        return projectService.getProject(projectUUID);
     }
 
     @PutMapping("/{projectUUID}")
