@@ -1,0 +1,58 @@
+openapi: 3.0.1
+info:
+  title: Project Convention Maker API
+  description: "에러 코드, 컨벤션은 /docs/index.html에서 확인하세요"
+  version: 1.0.0
+servers:
+- url: http://localhost:8080
+tags: []
+paths:
+  /api/v1/projects:
+    post:
+      tags:
+      - Project
+      summary: 프로젝트 생성 API
+      description: 프로젝트 생성 API
+      operationId: post-v1-create-project
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: '#/components/schemas/api-v1-projects-1860191008'
+            examples:
+              post-v1-create-project:
+                value: |-
+                  {
+                    "project_name" : "Boiler Plate"
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/api-v1-projects64539514'
+              examples:
+                post-v1-create-project:
+                  value: |-
+                    {
+                      "project_name" : "Boiler Plate",
+                      "project_uuid" : "20316495-ee2f-4766-a1b2-30ccd3c90fa4"
+                    }
+components:
+  schemas:
+    api-v1-projects64539514:
+      type: object
+      properties:
+        project_uuid:
+          type: string
+          description: 프로젝트 UUID
+        project_name:
+          type: string
+          description: 프로젝트 이름
+    api-v1-projects-1860191008:
+      type: object
+      properties:
+        project_name:
+          type: string
+          description: (Required) 프로젝트 이름
