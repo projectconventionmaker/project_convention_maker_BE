@@ -38,6 +38,12 @@ dependencies {
     //data
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    implementation 'io.hypersistence:hypersistence-utils-hibernate-62:3.5.1' // For @Type(JsonType.class)
+
+    //testcontainers
+    testImplementation "org.testcontainers:testcontainers:1.19.0"
+    testImplementation "org.testcontainers:junit-jupiter:1.19.0"
+    testImplementation "org.testcontainers:mariadb:1.19.0"
 
     //lombok
     compileOnly 'org.projectlombok:lombok'
@@ -79,17 +85,17 @@ openapi3 {
     servers = [
             { url = 'http://localhost:8080' },
     ]
-    title = 'Project title'
-    description = 'Project description'
+    title = 'Project Convention Maker API'
+    description = '에러 코드, 컨벤션은 /docs/index.html에서 확인하세요'
     version = "${project.version}"
     format = 'yaml'
 }
 
 tasks.register('copyOasToSwagger', Copy) {
-    dependsOn("openapi3"); // openapi3 Task가 먼저 실행되도록 설정
-    delete("src/main/resources/static/swagger-ui/openapi3.yaml"); // 기존 OAS 파일 삭제
-    from("build/api-spec/openapi3.yaml"); // 복제할 OAS 파일 지정
-    into("src/main/resources/static/swagger-ui/."); // 타겟 디렉터리로 파일 복제
+    dependsOn("openapi3");
+    delete("src/main/resources/static/swagger-ui/openapi3.yaml");
+    from("build/api-spec/openapi3.yaml");
+    into("src/main/resources/static/swagger-ui/.");
 }
 
 bootJar {
@@ -98,5 +104,5 @@ bootJar {
         from asciidoctor.outputDir
         into "src/main/resources/static/docs"
     }
-    archiveFileName.set "app.jar"
+    archiveFileName.set "application.jar"
 }
