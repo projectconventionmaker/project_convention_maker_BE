@@ -44,7 +44,7 @@ paths:
                         "detail" : null,
                         "project_name" : "Boiler Plate",
                         "team_name" : null,
-                        "project_uuid" : "a10a2054-7381-4874-8139-320dc337e079"
+                        "project_uuid" : "20b81a7b-8361-4d68-97ae-5c037b64e720"
                       }
                     }
   /api/v1/projects/{projectUUID}:
@@ -94,7 +94,7 @@ paths:
                         "detail" : "프로젝트 상세 설명",
                         "project_name" : "Boiler Plate",
                         "team_name" : "Team name",
-                        "project_uuid" : "a10a2054-7381-4874-8139-320dc337e079"
+                        "project_uuid" : "20b81a7b-8361-4d68-97ae-5c037b64e720"
                       }
                     }
   /api/v1/projects/{projectUUID}/code-conventions:
@@ -146,7 +146,7 @@ paths:
                         "detail" : "프로젝트 상세 설명",
                         "project_name" : "Boiler Plate",
                         "team_name" : "Team name",
-                        "project_uuid" : "a10a2054-7381-4874-8139-320dc337e079"
+                        "project_uuid" : "20b81a7b-8361-4d68-97ae-5c037b64e720"
                       },
                       "code_convention" : {
                         "items" : [ {
@@ -210,7 +210,7 @@ paths:
                         "detail" : "프로젝트 상세 설명",
                         "project_name" : "Boiler Plate",
                         "team_name" : "Team name",
-                        "project_uuid" : "a10a2054-7381-4874-8139-320dc337e079"
+                        "project_uuid" : "20b81a7b-8361-4d68-97ae-5c037b64e720"
                       },
                       "commit_convention" : {
                         "items" : [ {
@@ -277,7 +277,7 @@ paths:
                         "detail" : "프로젝트 상세 설명",
                         "project_name" : "Boiler Plate",
                         "team_name" : "Team name",
-                        "project_uuid" : "a10a2054-7381-4874-8139-320dc337e079"
+                        "project_uuid" : "20b81a7b-8361-4d68-97ae-5c037b64e720"
                       },
                       "ground_rule" : {
                         "items" : [ {
@@ -351,7 +351,7 @@ paths:
                         "detail" : "프로젝트 상세 설명",
                         "project_name" : "Boiler Plate",
                         "team_name" : "Team name",
-                        "project_uuid" : "a10a2054-7381-4874-8139-320dc337e079"
+                        "project_uuid" : "20b81a7b-8361-4d68-97ae-5c037b64e720"
                       },
                       "tech_stack" : {
                         "languages" : [ {
@@ -633,13 +633,6 @@ components:
               checked:
                 type: boolean
                 description: (Required) 항목이 채택되었는지
-    CreateProjectRequest:
-      title: CreateProjectRequest
-      type: object
-      properties:
-        project_name:
-          type: string
-          description: (Required) 프로젝트 이름
     UpdateProjectRequest:
       title: UpdateProjectRequest
       type: object
@@ -679,3 +672,10 @@ components:
               type: string
               description: 팀명
           description: 이름
+    CreateProjectRequest:
+      title: CreateProjectRequest
+      type: object
+      properties:
+        project_name:
+          type: string
+          description: (Required) 프로젝트 이름
