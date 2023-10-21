@@ -29,6 +29,12 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
 
+
+    public ProjectDTO getProject(String projectUuid) {
+        ProjectEntity projectEntity = findOrException(projectUuid);
+        return ProjectDTO.fromEntity(projectEntity);
+    }
+
     @Transactional
     public ProjectDTO createProject(String projectName) {
         try {

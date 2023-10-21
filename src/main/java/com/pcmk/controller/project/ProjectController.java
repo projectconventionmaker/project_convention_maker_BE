@@ -10,6 +10,7 @@ import com.pcmk.dto.project.request.TechStackUpdateRequestDTO;
 import com.pcmk.service.project.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,6 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProjectController {
 
     private final ProjectService projectService;
+
+    @GetMapping("/{projectUUID}")
+    public ProjectDTO getProject(@PathVariable String projectUUID) {
+        return projectService.getProject(projectUUID);
+    }
 
     @PostMapping
     public ProjectDTO createProject(@RequestBody @Validated ProjectCreateRequestDTO projectCreateRequestDTO) {
