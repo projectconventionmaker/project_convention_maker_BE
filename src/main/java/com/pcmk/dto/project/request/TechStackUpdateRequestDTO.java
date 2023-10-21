@@ -21,7 +21,8 @@ public class TechStackUpdateRequestDTO {
     private List<Style> styles;
 
     @Builder
-    private TechStackUpdateRequestDTO(List<ProgrammingLanguage> languages, List<Framework> frameworks,
+    private TechStackUpdateRequestDTO(List<ProgrammingLanguage> languages,
+                                      List<Framework> frameworks,
                                       List<Style> styles) {
         this.languages = languages;
         this.frameworks = frameworks;

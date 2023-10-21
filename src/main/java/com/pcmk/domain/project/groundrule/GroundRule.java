@@ -10,6 +10,12 @@ import lombok.NoArgsConstructor;
 public class GroundRule {
     List<GroundRuleItem> items;
 
+    public static GroundRule of(List<GroundRuleItem> items) {
+        return GroundRule.builder()
+                .items(items)
+                .build();
+    }
+
     @Builder
     private GroundRule(List<GroundRuleItem> items) {
         this.items = items;

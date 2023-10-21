@@ -1,0 +1,20 @@
+ifndef::snippets[]
+:snippets: ../../build/generated-snippets
+endif::[]
+= Project Convention Maker REST API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+:sectnums:
+
+[[Introduction]]
+== 개요
+
+include::outline.adoc[]
+
+
+
+

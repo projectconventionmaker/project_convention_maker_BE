@@ -1,24 +1,27 @@
 openapi: 3.0.1
 info:
   title: Project Convention Maker API
-  description: "에러 코드, 컨벤션은 /docs/index.html에서 확인하세요"
+  description: 에러 코드는 `/docs/index.html`에서 확인하세요
   version: 1.0.0
 servers:
+- url: https://api.pcmk.dppr.me
 - url: http://localhost:8080
 tags: []
 paths:
   /api/v1/projects:
     post:
       tags:
-      - Project
+      - Projects
       summary: 프로젝트 생성 API
-      description: 프로젝트 생성 API
+      description: |
+        - 필수값 비어있는 경우 400 에러 코드
+        - 이미 존재하는 프로젝트 이름 존재시 1001 에러 코드
       operationId: post-v1-create-project
       requestBody:
         content:
           application/json;charset=UTF-8:
             schema:
-              $ref: '#/components/schemas/api-v1-projects-1860191008'
+              $ref: '#/components/schemas/CreateProjectRequest'
             examples:
               post-v1-create-project:
                 value: |-
@@ -31,28 +34,648 @@ paths:
           content:
             application/json;charset=UTF-8:
               schema:
-                $ref: '#/components/schemas/api-v1-projects64539514'
+                $ref: '#/components/schemas/CreateProjectResponse'
               examples:
                 post-v1-create-project:
                   value: |-
                     {
-                      "project_name" : "Boiler Plate",
-                      "project_uuid" : "20316495-ee2f-4766-a1b2-30ccd3c90fa4"
+                      "project_detail" : {
+                        "introduction" : null,
+                        "detail" : null,
+                        "project_name" : "Boiler Plate",
+                        "team_name" : null,
+                        "project_uuid" : "a10a2054-7381-4874-8139-320dc337e079"
+                      }
+                    }
+  /api/v1/projects/{projectUUID}:
+    put:
+      tags:
+      - Projects
+      summary: 프로젝트 개요 수정 API
+      description: |
+        - 필수값 비어있는 경우 400 에러 코드
+        - 존재하지 않는 프로젝트 UUID로 요청시 1000 에러 코드
+        - 변경된 프로젝트명이 사용중인 경우 1001 에러 코드
+      operationId: put-v1-update-project
+      parameters:
+      - name: projectUUID
+        in: path
+        description: (Required) UUID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: '#/components/schemas/UpdateProjectRequest'
+            examples:
+              put-v1-update-project:
+                value: |-
+                  {
+                    "project_name" : "Changed project name",
+                    "team_name" : "Changed team name",
+                    "introduction" : "Changed project introduction",
+                    "detail" : "Change project detail"
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/UpdateProjectResponse'
+              examples:
+                put-v1-update-project:
+                  value: |-
+                    {
+                      "project_detail" : {
+                        "introduction" : "보일러 플레이트 프로젝트",
+                        "detail" : "프로젝트 상세 설명",
+                        "project_name" : "Boiler Plate",
+                        "team_name" : "Team name",
+                        "project_uuid" : "a10a2054-7381-4874-8139-320dc337e079"
+                      }
+                    }
+  /api/v1/projects/{projectUUID}/code-conventions:
+    put:
+      tags:
+      - Projects
+      summary: 프로젝트 코드 컨벤션 수정 API
+      description: |
+        - 필수값 비어있는 경우 400 에러 코드
+        - 존재하지 않는 프로젝트 UUID로 요청시 1000 에러 코드
+      operationId: put-v1-update-project-code-conventions
+      parameters:
+      - name: projectUUID
+        in: path
+        description: (Required) UUID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: '#/components/schemas/UpdateCodeConventionRequest'
+            examples:
+              put-v1-update-project-code-conventions:
+                value: |-
+                  {
+                    "items" : [ {
+                      "name" : "클래스명은 ~로 한다"
+                    }, {
+                      "name" : "테스트 메서드명은 ~로 한다"
+                    }, {
+                      "name" : "어노테이션명은 ~로 한다"
+                    } ]
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/UpdateCodeConventionResponse'
+              examples:
+                put-v1-update-project-code-conventions:
+                  value: |-
+                    {
+                      "project_detail" : {
+                        "introduction" : "보일러 플레이트 프로젝트",
+                        "detail" : "프로젝트 상세 설명",
+                        "project_name" : "Boiler Plate",
+                        "team_name" : "Team name",
+                        "project_uuid" : "a10a2054-7381-4874-8139-320dc337e079"
+                      },
+                      "code_convention" : {
+                        "items" : [ {
+                          "name" : "클래스명은 ~로 한다"
+                        }, {
+                          "name" : "테스트 메서드명은 ~로 한다"
+                        }, {
+                          "name" : "어노테이션명은 ~로 한다"
+                        } ]
+                      }
+                    }
+  /api/v1/projects/{projectUUID}/commit-conventions:
+    put:
+      tags:
+      - Projects
+      summary: 프로젝트 커밋 컨벤션 수정 API
+      description: |
+        - 필수값 비어있는 경우 400 에러 코드
+        - 존재하지 않는 프로젝트 UUID로 요청시 1000 에러 코드
+      operationId: put-v1-update-project-commit-conventions
+      parameters:
+      - name: projectUUID
+        in: path
+        description: (Required) UUID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: '#/components/schemas/UpdateCommitConventionRequest'
+            examples:
+              put-v1-update-project-commit-conventions:
+                value: |-
+                  {
+                    "items" : [ {
+                      "name" : "[feat]: 기능 추가,삭제, 변경",
+                      "checked" : true
+                    }, {
+                      "name" : "[fix]: 버그,오류 수정",
+                      "checked" : true
+                    }, {
+                      "name" : "[refactor]: 코드 리팩토링:",
+                      "checked" : true
+                    } ]
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/UpdateCommitConventionResponse'
+              examples:
+                put-v1-update-project-commit-conventions:
+                  value: |-
+                    {
+                      "project_detail" : {
+                        "introduction" : "보일러 플레이트 프로젝트",
+                        "detail" : "프로젝트 상세 설명",
+                        "project_name" : "Boiler Plate",
+                        "team_name" : "Team name",
+                        "project_uuid" : "a10a2054-7381-4874-8139-320dc337e079"
+                      },
+                      "commit_convention" : {
+                        "items" : [ {
+                          "name" : "[feat]: 기능 추가,삭제, 변경",
+                          "checked" : true
+                        }, {
+                          "name" : "[fix]: 버그,오류 수정",
+                          "checked" : true
+                        }, {
+                          "name" : "[refactor]: 코드 리팩토링:",
+                          "checked" : true
+                        } ]
+                      }
+                    }
+  /api/v1/projects/{projectUUID}/ground-rules:
+    put:
+      tags:
+      - Projects
+      summary: 프로젝트 그라운드 룰 수정 API
+      description: |
+        - 필수값 비어있는 경우 400 에러 코드
+        - 존재하지 않는 프로젝트 UUID로 요청시 1000 에러 코드
+      operationId: put-v1-update-project-ground-rule
+      parameters:
+      - name: projectUUID
+        in: path
+        description: (Required) UUID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: '#/components/schemas/UpdateGroundRuleRequest'
+            examples:
+              put-v1-update-project-ground-rule:
+                value: |-
+                  {
+                    "items" : [ {
+                      "name" : "님 금지! 극 존대 금지!",
+                      "checked" : true
+                    }, {
+                      "name" : "ZEP에서 캠은 켜지 않을 거에요",
+                      "checked" : false
+                    }, {
+                      "name" : "스프린트는 협업과 프로세스를 배우는 시간이지 포트폴리오나 사이드 프로젝트를 하는 시간이 아닙니다",
+                      "checked" : true
+                    } ]
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/UpdateGroundRuleResponse'
+              examples:
+                put-v1-update-project-ground-rule:
+                  value: |-
+                    {
+                      "project_detail" : {
+                        "introduction" : "보일러 플레이트 프로젝트",
+                        "detail" : "프로젝트 상세 설명",
+                        "project_name" : "Boiler Plate",
+                        "team_name" : "Team name",
+                        "project_uuid" : "a10a2054-7381-4874-8139-320dc337e079"
+                      },
+                      "ground_rule" : {
+                        "items" : [ {
+                          "name" : "님 금지! 극 존대 금지!",
+                          "checked" : true
+                        }, {
+                          "name" : "ZEP에서 캠은 켜지 않을 거에요",
+                          "checked" : false
+                        }, {
+                          "name" : "스프린트는 협업과 프로세스를 배우는 시간이지 포트폴리오나 사이드 프로젝트를 하는 시간이 아닙니다",
+                          "checked" : true
+                        } ]
+                      }
+                    }
+  /api/v1/projects/{projectUUID}/tech-stack:
+    put:
+      tags:
+      - Projects
+      summary: 프로젝트 기술 스택 수정 API
+      description: |
+        - 필수값 비어있는 경우 400 에러 코드
+        - 존재하지 않는 프로젝트 UUID로 요청시 1000 에러 코드
+      operationId: put-v1-update-project-tech-stack
+      parameters:
+      - name: projectUUID
+        in: path
+        description: (Required) UUID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: '#/components/schemas/UpdateTechStackRequest'
+            examples:
+              put-v1-update-project-tech-stack:
+                value: |-
+                  {
+                    "languages" : [ {
+                      "name" : "Java"
+                    }, {
+                      "name" : "Kotlin"
+                    }, {
+                      "name" : "Golang"
+                    } ],
+                    "frameworks" : [ {
+                      "name" : "Spring"
+                    }, {
+                      "name" : "FastAPI"
+                    }, {
+                      "name" : "Django"
+                    } ],
+                    "styles" : [ {
+                      "name" : "Bootstrap"
+                    } ]
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/UpdateTechStackResponse'
+              examples:
+                put-v1-update-project-tech-stack:
+                  value: |-
+                    {
+                      "project_detail" : {
+                        "introduction" : "보일러 플레이트 프로젝트",
+                        "detail" : "프로젝트 상세 설명",
+                        "project_name" : "Boiler Plate",
+                        "team_name" : "Team name",
+                        "project_uuid" : "a10a2054-7381-4874-8139-320dc337e079"
+                      },
+                      "tech_stack" : {
+                        "languages" : [ {
+                          "name" : "Java"
+                        }, {
+                          "name" : "Kotlin"
+                        }, {
+                          "name" : "Golang"
+                        } ],
+                        "frameworks" : [ {
+                          "name" : "Spring"
+                        }, {
+                          "name" : "FastAPI"
+                        }, {
+                          "name" : "Django"
+                        } ],
+                        "styles" : [ {
+                          "name" : "Bootstrap"
+                        } ]
+                      }
                     }
 components:
   schemas:
-    api-v1-projects64539514:
+    UpdateTechStackResponse:
+      title: UpdateTechStackResponse
       type: object
       properties:
-        project_uuid:
-          type: string
-          description: 프로젝트 UUID
-        project_name:
-          type: string
-          description: 프로젝트 이름
-    api-v1-projects-1860191008:
+        tech_stack:
+          type: object
+          properties:
+            languages:
+              type: array
+              description: 언어
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 언어 이름
+            frameworks:
+              type: array
+              description: 프레임워크
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 프레임워크 이름
+            styles:
+              type: array
+              description: 스타일
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 스타일 이름
+          description: 기술 스택
+        project_detail:
+          type: object
+          properties:
+            project_uuid:
+              type: string
+              description: UUID
+            detail:
+              type: string
+              description: (Nullable)  프로젝트 상세
+            project_name:
+              type: string
+              description: 프로젝트명
+            introduction:
+              type: string
+              description: (Nullable) 프로젝트 한 줄 소개
+            team_name:
+              type: string
+              description: (Nullable) 팀명
+          description: 이름
+    UpdateGroundRuleResponse:
+      title: UpdateGroundRuleResponse
+      type: object
+      properties:
+        ground_rule:
+          type: object
+          properties:
+            items:
+              type: array
+              description: 그라운드 룰 항목 리스트
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 항목 이름
+                  checked:
+                    type: boolean
+                    description: 항목이 채택되었는지
+          description: 그라운드 룰
+        project_detail:
+          type: object
+          properties:
+            project_uuid:
+              type: string
+              description: UUID
+            detail:
+              type: string
+              description: (Nullable)  프로젝트 상세
+            project_name:
+              type: string
+              description: 프로젝트명
+            introduction:
+              type: string
+              description: (Nullable) 프로젝트 한 줄 소개
+            team_name:
+              type: string
+              description: (Nullable) 팀명
+          description: 이름
+    UpdateCommitConventionResponse:
+      title: UpdateCommitConventionResponse
+      type: object
+      properties:
+        project_detail:
+          type: object
+          properties:
+            project_uuid:
+              type: string
+              description: UUID
+            detail:
+              type: string
+              description: (Nullable)  프로젝트 상세
+            project_name:
+              type: string
+              description: 프로젝트명
+            introduction:
+              type: string
+              description: (Nullable) 프로젝트 한 줄 소개
+            team_name:
+              type: string
+              description: (Nullable) 팀명
+          description: 이름
+        commit_convention:
+          type: object
+          properties:
+            items:
+              type: array
+              description: 커밋 컨벤션 항목 리스트
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 항목 이름
+                  checked:
+                    type: boolean
+                    description: 항목이 채택되었는지
+          description: 커밋 컨벤션
+    UpdateTechStackRequest:
+      title: UpdateTechStackRequest
+      type: object
+      properties:
+        languages:
+          type: array
+          description: (Required) 언어
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: (Required) 언어 이름
+        frameworks:
+          type: array
+          description: (Required) 프레임워크
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: (Required) 프레임워크 이름
+        styles:
+          type: array
+          description: (Required) 스타일
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: (Required) 스타일 이름
+    UpdateCodeConventionResponse:
+      title: UpdateCodeConventionResponse
+      type: object
+      properties:
+        code_convention:
+          type: object
+          properties:
+            items:
+              type: array
+              description: 코드 컨벤션 항목 리스트
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 항목 이름
+          description: 코드 컨벤션
+        project_detail:
+          type: object
+          properties:
+            project_uuid:
+              type: string
+              description: UUID
+            detail:
+              type: string
+              description: (Nullable) 프로젝트 상세
+            project_name:
+              type: string
+              description: 프로젝트명
+            introduction:
+              type: string
+              description: (Nullable) 프로젝트 한 줄 소개
+            team_name:
+              type: string
+              description: (Nullable) 팀명
+          description: 프로젝트 정보
+    CreateProjectResponse:
+      title: CreateProjectResponse
+      type: object
+      properties:
+        project_detail:
+          type: object
+          properties:
+            project_uuid:
+              type: string
+              description: UUID
+            project_name:
+              type: string
+              description: 프로젝트명
+          description: 이름
+    UpdateCodeConventionRequest:
+      title: UpdateCodeConventionRequest
+      type: object
+      properties:
+        items:
+          type: array
+          description: (Required) 코드 컨벤션 항목
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: (Required) 항목 이름
+    UpdateGroundRuleRequest:
+      title: UpdateGroundRuleRequest
+      type: object
+      properties:
+        items:
+          type: array
+          description: (Required) 그라운드 룰 항목
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: (Required) 항목 이름
+              checked:
+                type: boolean
+                description: (Required) 항목이 채택되었는지
+    UpdateCommitConventionRequest:
+      title: UpdateCommitConventionRequest
+      type: object
+      properties:
+        items:
+          type: array
+          description: (Required) 커밋 컨벤션 항목
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: (Required) 항목 이름
+              checked:
+                type: boolean
+                description: (Required) 항목이 채택되었는지
+    CreateProjectRequest:
+      title: CreateProjectRequest
       type: object
       properties:
         project_name:
           type: string
           description: (Required) 프로젝트 이름
+    UpdateProjectRequest:
+      title: UpdateProjectRequest
+      type: object
+      properties:
+        detail:
+          type: string
+          description: (Required) 프로젝트 상세
+        project_name:
+          type: string
+          description: (Required) 프로젝트명
+        introduction:
+          type: string
+          description: (Required) 프로젝트 한 줄 소개
+        team_name:
+          type: string
+          description: (Required) 팀명
+    UpdateProjectResponse:
+      title: UpdateProjectResponse
+      type: object
+      properties:
+        project_detail:
+          type: object
+          properties:
+            project_uuid:
+              type: string
+              description: UUID
+            detail:
+              type: string
+              description: 프로젝트 상세
+            project_name:
+              type: string
+              description: 프로젝트명
+            introduction:
+              type: string
+              description: 프로젝트 한 줄 소개
+            team_name:
+              type: string
+              description: 팀명
+          description: 이름

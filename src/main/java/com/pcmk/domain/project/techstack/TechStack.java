@@ -13,6 +13,14 @@ public class TechStack {
     private List<Framework> frameworks;
     private List<Style> styles;
 
+    public static TechStack of(List<ProgrammingLanguage> languages, List<Framework> frameworks, List<Style> styles) {
+        return TechStack.builder()
+                .languages(languages)
+                .frameworks(frameworks)
+                .styles(styles)
+                .build();
+    }
+
     @Builder
     private TechStack(List<ProgrammingLanguage> languages, List<Framework> frameworks, List<Style> styles) {
         this.languages = languages;

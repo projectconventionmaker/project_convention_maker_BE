@@ -83,10 +83,11 @@ asciidoctor.doFirst {
 
 openapi3 {
     servers = [
-            { url = 'http://localhost:8080' },
+            { url = 'https://api.pcmk.dppr.me' },
+            { url = 'http://localhost:8080' }
     ]
     title = 'Project Convention Maker API'
-    description = '에러 코드, 컨벤션은 /docs/index.html에서 확인하세요'
+    description = '에러 코드는 `/docs/index.html`에서 확인하세요'
     version = "${project.version}"
     format = 'yaml'
 }

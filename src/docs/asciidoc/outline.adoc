@@ -1,0 +1,53 @@
+[[api-base-path]]
+=== API 서버 경로
+
+[source]
+----
+https://api.pcmk.dppr.me
+----
+
+[[success-response]]
+=== 정상 응답 코드
+
+[cols="1,1,1,1,1",options="header"]
+|===
+| HTTP Status | Code | Message | Data | Description
+| `200 OK` | 200 | OK  | 응답 데이터 | 정상 응답
+|===
+
+[[failure-response]]
+=== 실패 응답 형식
+
+[source,json]
+----
+{
+    "code": "Error code (Number)",
+    "message": "Error message (String)",
+    "data": "Error payload (Object)"
+}
+----
+
+[[custom-exception-error]]
+=== 예외 코드 범위
+
+[cols="1,1",options="header"]
+|===
+| Code Range | Category
+
+| `400-500` | 기본 HTTP 에러
+| `1000-1099` | 프로젝트 관련된 에러
+|===
+
+=== 예외 응답 설명
+
+[cols="1,1,1,1,1",options="header"]
+|===
+| HTTP Status | Name | Code | Message | Data
+| `400 BAD_REQUEST` | INVALID_ARGUMENT | 400 | 파라미터가 올바르지 않습니다 | Null
+| `403 FORBIDDEN` | FORBIDDEN | 403 | 권한이 없습니다 | Null
+| `404 NOT_FOUND` | NOT_FOUND | 404 | 존재하지 않는 리소스에 대한 요청입니다 | Null
+| `405 METHOD_NOT_ALLOWED` | METHOD_NOT_ALLOWED | 405 | 올바르지 않은 요청 메소드입니다 | Null
+| `500 INTERNAL_SERVER_ERROR` | INTERNAL_SERVER_ERROR | 500 | 서버 내부 오류 | Null
+| `404 UNAUTHORIZED` | PROJECT_NOT_FOUND | 1000 | 존재하지 않는 프로젝트입니다 | Null
+| `409 CONFLICT` | PROJECT_NAME_DUPLICATED | 1001 | 이미 존재하는 프로젝트 이름입니다 | Null
+|===

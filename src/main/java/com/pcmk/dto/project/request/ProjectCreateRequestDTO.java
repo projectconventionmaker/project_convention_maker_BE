@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class ProjectCreateRequestDTO {
 
+    @NotBlank
     @JsonProperty("project_name")
-    @NotBlank(message = "프로젝트 이름이 비어있으면 안됩니다.")
     private String projectName;
 
     @Builder

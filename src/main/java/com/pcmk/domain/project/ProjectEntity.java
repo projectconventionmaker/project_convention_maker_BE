@@ -42,8 +42,8 @@ public class ProjectEntity extends BaseEntity {
     @Column(name = "introduction", columnDefinition = "varchar(255) COMMENT '프로젝트 한 줄 소개'")
     private String introduction;
 
-    @Column(name = "project_uuid", unique = true, nullable = false, columnDefinition = "varchar(150) COMMENT '프로젝트 UUID'")
-    private String projectUuid;
+    @Column(name = "project_uuid", unique = true, nullable = false, updatable = false, columnDefinition = "varchar(150) COMMENT '프로젝트 UUID'")
+    private String projectUUID;
 
     @Column(name = "detail", columnDefinition = "text COMMENT '프로젝트 상세'")
     private String detail;
@@ -65,9 +65,12 @@ public class ProjectEntity extends BaseEntity {
     private CodeConvention codeConvention;
 
     @Builder
-    private ProjectEntity(String projectName, String projectUuid) {
+    private ProjectEntity(String projectName, String teamName, String introduction, String projectUUID, String detail) {
         this.projectName = projectName;
-        this.projectUuid = projectUuid;
+        this.teamName = teamName;
+        this.introduction = introduction;
+        this.detail = detail;
+        this.projectUUID = projectUUID;
     }
 
     public void updateTechStack(TechStack updatedTechStack) {
@@ -76,5 +79,20 @@ public class ProjectEntity extends BaseEntity {
 
     public void updateGroundRule(GroundRule updatedGroundRule) {
         this.groundRule = updatedGroundRule;
+    }
+
+    public void updateCommitConvention(CommitConvention updatedCommitConvention) {
+        this.commitConvention = updatedCommitConvention;
+    }
+
+    public void updateCodeConvention(CodeConvention updatedCodeConvention) {
+        this.codeConvention = updatedCodeConvention;
+    }
+
+    public void updateProject(ProjectEntity updatedProjectEntity) {
+        this.projectName = updatedProjectEntity.getProjectName();
+        this.teamName = updatedProjectEntity.getTeamName();
+        this.introduction = updatedProjectEntity.getIntroduction();
+        this.detail = updatedProjectEntity.getDetail();
     }
 }
