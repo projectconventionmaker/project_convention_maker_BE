@@ -10,8 +10,8 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: pcmk
-  EB_APP_NAME: pcmk
-  EB_ENV_NAME: pcmk-env
+  EB_APP_NAME: dppr
+  EB_ENV_NAME: dppr-env
 
 permissions:
   contents: read
