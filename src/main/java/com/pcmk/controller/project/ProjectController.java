@@ -1,13 +1,14 @@
 package com.pcmk.controller.project;
 
 import com.pcmk.dto.project.ProjectDTO;
-import com.pcmk.dto.project.request.CodeConventionUpdateRequestDTO;
 import com.pcmk.dto.project.request.CommitConventionUpdateRequestDTO;
-import com.pcmk.dto.project.request.GroundRuleUpdateRequestDTO;
-import com.pcmk.dto.project.request.ProjectCreateRequestDTO;
-import com.pcmk.dto.project.request.ProjectUpdateRequestDTO;
+import com.pcmk.dto.project.request.codeconvention.CodeConventionUpdateRequestDTO;
+import com.pcmk.dto.project.request.groundrule.GroundRuleUpdateRequestDTO;
+import com.pcmk.dto.project.request.project.ProjectCreateRequestDTO;
+import com.pcmk.dto.project.request.project.ProjectUpdateRequestDTO;
 import com.pcmk.dto.project.request.techstack.TechStackUpdateRequestDTO;
 import com.pcmk.dto.project.response.TechStackUpdateResponseDTO;
+import com.pcmk.dto.project.response.codeconvention.CodeConventionUpdateResponseDTO;
 import com.pcmk.service.project.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -61,8 +62,8 @@ public class ProjectController {
     }
 
     @PutMapping("/{projectUUID}/code-conventions")
-    public ProjectDTO updateCodeConventions(@PathVariable String projectUUID,
-                                            @RequestBody @Validated CodeConventionUpdateRequestDTO codeConventionUpdateRequestDTO) {
+    public CodeConventionUpdateResponseDTO updateCodeConventions(@PathVariable String projectUUID,
+                                                                 @RequestBody @Validated CodeConventionUpdateRequestDTO codeConventionUpdateRequestDTO) {
         return projectService.updateCodeConvention(projectUUID, codeConventionUpdateRequestDTO);
     }
 }

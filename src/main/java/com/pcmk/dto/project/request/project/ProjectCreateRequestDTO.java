@@ -1,4 +1,4 @@
-package com.pcmk.dto.project.request;
+package com.pcmk.dto.project.request.project;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;

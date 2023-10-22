@@ -8,16 +8,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class CodeConvention {
-    List<CodeConventionItem> items;
 
-    public static CodeConvention of(List<CodeConventionItem> items) {
+    List<CodeConventionItem> codeConventionItems;
+
+    public static CodeConvention of(List<CodeConventionItem> codeConventionItems) {
         return CodeConvention.builder()
-                .items(items)
+                .codeConventionItems(codeConventionItems)
                 .build();
     }
-    
+
     @Builder
-    private CodeConvention(List<CodeConventionItem> items) {
-        this.items = items;
+    private CodeConvention(List<CodeConventionItem> codeConventionItems) {
+        this.codeConventionItems = codeConventionItems;
     }
 }

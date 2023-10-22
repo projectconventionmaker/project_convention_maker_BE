@@ -1,4 +1,4 @@
-package com.pcmk.dto.project.request;
+package com.pcmk.dto.project.request.groundrule;
 
 import com.pcmk.domain.project.groundrule.GroundRuleItem;
 import jakarta.validation.constraints.NotNull;

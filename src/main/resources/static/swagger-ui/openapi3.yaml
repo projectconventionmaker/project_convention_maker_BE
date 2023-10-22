@@ -44,95 +44,10 @@ paths:
                         "detail" : null,
                         "project_name" : "Boiler Plate",
                         "team_name" : null,
-                        "project_uuid" : "e1555f7b-8113-4224-a082-1503c43de5ab"
+                        "project_uuid" : "5a9629c5-c515-4752-8aeb-34a605cd8a87"
                       }
                     }
   /api/v1/projects/{projectUUID}:
-    get:
-      tags:
-      - Projects
-      summary: 프로젝트 조회 API
-      description: |
-        - 존재하지 않는 프로젝트 UUID로 요청시 1000 에러 코드
-      operationId: get-v1-get-project
-      parameters:
-      - name: projectUUID
-        in: path
-        description: (Required) UUID
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: "200"
-          content:
-            application/json;charset=UTF-8:
-              schema:
-                $ref: '#/components/schemas/GetProjectResponse'
-              examples:
-                get-v1-get-project:
-                  value: |-
-                    {
-                      "project_detail" : {
-                        "introduction" : "보일러 플레이트 프로젝트",
-                        "detail" : "프로젝트 상세 설명",
-                        "project_name" : "Boiler Plate",
-                        "team_name" : "Team name",
-                        "project_uuid" : "e1555f7b-8113-4224-a082-1503c43de5ab"
-                      },
-                      "tech_stack" : {
-                        "languages" : [ {
-                          "name" : "Java"
-                        }, {
-                          "name" : "Kotlin"
-                        }, {
-                          "name" : "Golang"
-                        } ],
-                        "frameworks" : [ {
-                          "name" : "Spring"
-                        }, {
-                          "name" : "FastAPI"
-                        }, {
-                          "name" : "Django"
-                        } ],
-                        "styles" : [ {
-                          "name" : "Bootstrap"
-                        } ]
-                      },
-                      "ground_rule" : {
-                        "items" : [ {
-                          "name" : "님 금지! 극 존대 금지!",
-                          "checked" : true
-                        }, {
-                          "name" : "ZEP에서 캠은 켜지 않을 거에요",
-                          "checked" : false
-                        }, {
-                          "name" : "스프린트는 협업과 프로세스를 배우는 시간이지 포트폴리오나 사이드 프로젝트를 하는 시간이 아닙니다",
-                          "checked" : true
-                        } ]
-                      },
-                      "code_convention" : {
-                        "items" : [ {
-                          "name" : "클래스명은 ~로 한다"
-                        }, {
-                          "name" : "테스트 메서드명은 ~로 한다"
-                        }, {
-                          "name" : "어노테이션명은 ~로 한다"
-                        } ]
-                      },
-                      "commit_convention" : {
-                        "items" : [ {
-                          "name" : "[feat]: 기능 추가,삭제, 변경",
-                          "checked" : true
-                        }, {
-                          "name" : "[fix]: 버그,오류 수정",
-                          "checked" : true
-                        }, {
-                          "name" : "[refactor]: 코드 리팩토링:",
-                          "checked" : true
-                        } ]
-                      }
-                    }
     put:
       tags:
       - Projects
@@ -179,7 +94,7 @@ paths:
                         "detail" : "프로젝트 상세 설명",
                         "project_name" : "Boiler Plate",
                         "team_name" : "Team name",
-                        "project_uuid" : "e1555f7b-8113-4224-a082-1503c43de5ab"
+                        "project_uuid" : "5a9629c5-c515-4752-8aeb-34a605cd8a87"
                       }
                     }
   /api/v1/projects/{projectUUID}/code-conventions:
@@ -207,12 +122,24 @@ paths:
               put-v1-update-project-code-conventions:
                 value: |-
                   {
-                    "items" : [ {
-                      "name" : "클래스명은 ~로 한다"
+                    "code_conventions" : [ {
+                      "category" : "자바 네이밍",
+                      "items" : [ {
+                        "name" : "클래스명은 카멜케이스로 만든다",
+                        "example" : "클래스명은 카멜케이스로 만든다"
+                      }, {
+                        "name" : "메서드명은 동사로 시작한다",
+                        "example" : "메서드명은 동사로 시작한다"
+                      } ]
                     }, {
-                      "name" : "테스트 메서드명은 ~로 한다"
-                    }, {
-                      "name" : "어노테이션명은 ~로 한다"
+                      "category" : "코틀린 네이밍",
+                      "items" : [ {
+                        "name" : "클래스명은 카멜케이스로 만든다",
+                        "example" : "클래스명은 카멜케이스로 만든다"
+                      }, {
+                        "name" : "메서드명은 동사로 시작한다",
+                        "example" : "메서드명은 동사로 시작한다"
+                      } ]
                     } ]
                   }
       responses:
@@ -226,22 +153,25 @@ paths:
                 put-v1-update-project-code-conventions:
                   value: |-
                     {
-                      "project_detail" : {
-                        "introduction" : "보일러 플레이트 프로젝트",
-                        "detail" : "프로젝트 상세 설명",
-                        "project_name" : "Boiler Plate",
-                        "team_name" : "Team name",
-                        "project_uuid" : "e1555f7b-8113-4224-a082-1503c43de5ab"
-                      },
-                      "code_convention" : {
+                      "code_conventions" : [ {
+                        "category" : "자바 네이밍",
                         "items" : [ {
-                          "name" : "클래스명은 ~로 한다"
+                          "name" : "클래스명은 카멜케이스로 만든다",
+                          "example" : "CamelCase"
                         }, {
-                          "name" : "테스트 메서드명은 ~로 한다"
-                        }, {
-                          "name" : "어노테이션명은 ~로 한다"
+                          "name" : "메서드명은 동사로 시작한다",
+                          "example" : "updateCodeConvention"
                         } ]
-                      }
+                      }, {
+                        "category" : "코틀린 네이밍",
+                        "items" : [ {
+                          "name" : "클래스명은 카멜케이스로 만든다",
+                          "example" : "CamelCase"
+                        }, {
+                          "name" : "메서드명은 동사로 시작한다",
+                          "example" : "updateCodeConvention"
+                        } ]
+                      } ]
                     }
   /api/v1/projects/{projectUUID}/commit-conventions:
     put:
@@ -295,7 +225,7 @@ paths:
                         "detail" : "프로젝트 상세 설명",
                         "project_name" : "Boiler Plate",
                         "team_name" : "Team name",
-                        "project_uuid" : "e1555f7b-8113-4224-a082-1503c43de5ab"
+                        "project_uuid" : "5a9629c5-c515-4752-8aeb-34a605cd8a87"
                       },
                       "commit_convention" : {
                         "items" : [ {
@@ -362,7 +292,7 @@ paths:
                         "detail" : "프로젝트 상세 설명",
                         "project_name" : "Boiler Plate",
                         "team_name" : "Team name",
-                        "project_uuid" : "e1555f7b-8113-4224-a082-1503c43de5ab"
+                        "project_uuid" : "5a9629c5-c515-4752-8aeb-34a605cd8a87"
                       },
                       "ground_rule" : {
                         "items" : [ {
@@ -402,22 +332,15 @@ paths:
               put-v1-update-project-tech-stack:
                 value: |-
                   {
-                    "languages" : [ {
-                      "name" : "Java"
+                    "tech_stack" : [ {
+                      "category" : "Language",
+                      "names" : [ "Java", "Kotlin", "Golang" ]
                     }, {
-                      "name" : "Kotlin"
+                      "category" : "DB",
+                      "names" : [ "MySQL", "MariaDB", "DynamoDB", "MongoDB", "Redis" ]
                     }, {
-                      "name" : "Golang"
-                    } ],
-                    "frameworks" : [ {
-                      "name" : "Spring"
-                    }, {
-                      "name" : "FastAPI"
-                    }, {
-                      "name" : "Django"
-                    } ],
-                    "styles" : [ {
-                      "name" : "Bootstrap"
+                      "category" : "Framework",
+                      "names" : [ "Spring", "FastAPI", "Django" ]
                     } ]
                   }
       responses:
@@ -431,32 +354,16 @@ paths:
                 put-v1-update-project-tech-stack:
                   value: |-
                     {
-                      "project_detail" : {
-                        "introduction" : "보일러 플레이트 프로젝트",
-                        "detail" : "프로젝트 상세 설명",
-                        "project_name" : "Boiler Plate",
-                        "team_name" : "Team name",
-                        "project_uuid" : "e1555f7b-8113-4224-a082-1503c43de5ab"
-                      },
-                      "tech_stack" : {
-                        "languages" : [ {
-                          "name" : "Java"
-                        }, {
-                          "name" : "Kotlin"
-                        }, {
-                          "name" : "Golang"
-                        } ],
-                        "frameworks" : [ {
-                          "name" : "Spring"
-                        }, {
-                          "name" : "FastAPI"
-                        }, {
-                          "name" : "Django"
-                        } ],
-                        "styles" : [ {
-                          "name" : "Bootstrap"
-                        } ]
-                      }
+                      "tech_stack" : [ {
+                        "category" : "Language",
+                        "names" : [ "Java", "Kotlin", "Golang" ]
+                      }, {
+                        "category" : "DB",
+                        "names" : [ "MySQL", "MariaDB", "DynamoDB", "MongoDB", "Redis" ]
+                      }, {
+                        "category" : "Framework",
+                        "names" : [ "Spring", "FastAPI", "Django" ]
+                      } ]
                     }
 components:
   schemas:
@@ -480,60 +387,6 @@ components:
                     type: boolean
                     description: 항목이 채택되었는지
           description: 그라운드 룰
-        project_detail:
-          type: object
-          properties:
-            project_uuid:
-              type: string
-              description: UUID
-            detail:
-              type: string
-              description: (Nullable)  프로젝트 상세
-            project_name:
-              type: string
-              description: 프로젝트명
-            introduction:
-              type: string
-              description: (Nullable) 프로젝트 한 줄 소개
-            team_name:
-              type: string
-              description: (Nullable) 팀명
-          description: 이름
-    UpdateTechStackResponse:
-      title: UpdateTechStackResponse
-      type: object
-      properties:
-        tech_stack:
-          type: object
-          properties:
-            languages:
-              type: array
-              description: 언어
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: 언어 이름
-            frameworks:
-              type: array
-              description: 프레임워크
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: 프레임워크 이름
-            styles:
-              type: array
-              description: 스타일
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: 스타일 이름
-          description: 기술 스택
         project_detail:
           type: object
           properties:
@@ -592,73 +445,75 @@ components:
                     type: boolean
                     description: 항목이 채택되었는지
           description: 커밋 컨벤션
+    UpdateCodeConventionRequest:
+      title: UpdateCodeConventionRequest
+      type: object
+      properties:
+        code_conventions:
+          type: array
+          description: (Required) 코드 컨벤션
+          items:
+            type: object
+            properties:
+              category:
+                type: string
+                description: (Required) 카테고리명
+              items:
+                type: array
+                description: (Required) 컨벤션 항목
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: (Required) 항목명
+                    example:
+                      type: string
+                      description: (Required) 얘시
     UpdateTechStackRequest:
       title: UpdateTechStackRequest
       type: object
       properties:
-        languages:
+        tech_stack:
           type: array
-          description: (Required) 언어
+          description: (Required) 테크 스택 리스트
           items:
             type: object
             properties:
-              name:
+              names:
+                type: array
+                description: (Required) 기술 이름
+                items:
+                  oneOf:
+                  - type: object
+                  - type: boolean
+                  - type: string
+                  - type: number
+              category:
                 type: string
-                description: (Required) 언어 이름
-        frameworks:
-          type: array
-          description: (Required) 프레임워크
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: (Required) 프레임워크 이름
-        styles:
-          type: array
-          description: (Required) 스타일
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: (Required) 스타일 이름
-    UpdateCodeConventionResponse:
-      title: UpdateCodeConventionResponse
+                description: (Required) 스택 카테고리
+    UpdateTechStackResponse:
+      title: UpdateTechStackResponse
       type: object
       properties:
-        code_convention:
-          type: object
-          properties:
-            items:
-              type: array
-              description: 코드 컨벤션 항목 리스트
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: 항목 이름
-          description: 코드 컨벤션
-        project_detail:
-          type: object
-          properties:
-            project_uuid:
-              type: string
-              description: UUID
-            detail:
-              type: string
-              description: (Nullable) 프로젝트 상세
-            project_name:
-              type: string
-              description: 프로젝트명
-            introduction:
-              type: string
-              description: (Nullable) 프로젝트 한 줄 소개
-            team_name:
-              type: string
-              description: (Nullable) 팀명
-          description: 프로젝트 정보
+        tech_stack:
+          type: array
+          description: 테크 스택 리스트
+          items:
+            type: object
+            properties:
+              names:
+                type: array
+                description: 기술 이름
+                items:
+                  oneOf:
+                  - type: object
+                  - type: boolean
+                  - type: string
+                  - type: number
+              category:
+                type: string
+                description: 스택 카테고리
     CreateProjectResponse:
       title: CreateProjectResponse
       type: object
@@ -673,128 +528,6 @@ components:
               type: string
               description: 프로젝트명
           description: 이름
-    GetProjectResponse:
-      title: GetProjectResponse
-      type: object
-      properties:
-        ground_rule:
-          type: object
-          properties:
-            items:
-              type: array
-              description: 그라운드 룰 항목 리스트
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: 항목 이름
-                  checked:
-                    type: boolean
-                    description: 항목이 채택되었는지
-          description: 그라운드 룰
-        tech_stack:
-          type: object
-          properties:
-            languages:
-              type: array
-              description: 언어
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: 언어 이름
-            frameworks:
-              type: array
-              description: 프레임워크
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: 프레임워크 이름
-            styles:
-              type: array
-              description: 스타일
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: 스타일 이름
-          description: 기술 스택
-        code_convention:
-          type: object
-          properties:
-            items:
-              type: array
-              description: 코드 컨벤션 항목 리스트
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: 항목 이름
-          description: 코드 컨벤션
-        project_detail:
-          type: object
-          properties:
-            project_uuid:
-              type: string
-              description: UUID
-            detail:
-              type: string
-              description: 프로젝트 상세
-            project_name:
-              type: string
-              description: 프로젝트명
-            introduction:
-              type: string
-              description: 프로젝트 한 줄 소개
-            team_name:
-              type: string
-              description: 팀명
-          description: 이름
-        commit_convention:
-          type: object
-          properties:
-            items:
-              type: array
-              description: 커밋 컨벤션 항목 리스트
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: 항목 이름
-                  checked:
-                    type: boolean
-                    description: 항목이 채택되었는지
-          description: 커밋 컨벤션
-    UpdateCommitConventionRequest:
-      title: UpdateCommitConventionRequest
-      type: object
-      properties:
-        items:
-          type: array
-          description: (Required) 커밋 컨벤션 항목
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: (Required) 항목 이름
-              checked:
-                type: boolean
-                description: (Required) 항목이 채택되었는지
-    CreateProjectRequest:
-      title: CreateProjectRequest
-      type: object
-      properties:
-        project_name:
-          type: string
-          description: (Required) 프로젝트 이름
     UpdateGroundRuleRequest:
       title: UpdateGroundRuleRequest
       type: object
@@ -811,19 +544,47 @@ components:
               checked:
                 type: boolean
                 description: (Required) 항목이 채택되었는지
-    UpdateCodeConventionRequest:
-      title: UpdateCodeConventionRequest
+    UpdateCommitConventionRequest:
+      title: UpdateCommitConventionRequest
       type: object
       properties:
         items:
           type: array
-          description: (Required) 코드 컨벤션 항목
+          description: (Required) 커밋 컨벤션 항목
           items:
             type: object
             properties:
               name:
                 type: string
                 description: (Required) 항목 이름
+              checked:
+                type: boolean
+                description: (Required) 항목이 채택되었는지
+    UpdateCodeConventionResponse:
+      title: UpdateCodeConventionResponse
+      type: object
+      properties:
+        code_conventions:
+          type: array
+          description: (Required) 코드 컨벤션
+          items:
+            type: object
+            properties:
+              category:
+                type: string
+                description: (Required) 카테고리명
+              items:
+                type: array
+                description: (Required) 컨벤션 항목
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: (Required) 항목명
+                    example:
+                      type: string
+                      description: (Required) 얘시
     UpdateProjectRequest:
       title: UpdateProjectRequest
       type: object
@@ -863,3 +624,10 @@ components:
               type: string
               description: 팀명
           description: 이름
+    CreateProjectRequest:
+      title: CreateProjectRequest
+      type: object
+      properties:
+        project_name:
+          type: string
+          description: (Required) 프로젝트 이름
