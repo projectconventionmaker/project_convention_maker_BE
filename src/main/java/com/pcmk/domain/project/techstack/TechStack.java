@@ -9,22 +9,16 @@ import lombok.NoArgsConstructor;
 @Data
 public class TechStack {
 
-    private List<ProgrammingLanguage> languages;
-    private List<Framework> frameworks;
-    private List<Style> styles;
+    private List<TechStackElement> techStackElmentList;
 
-    public static TechStack of(List<ProgrammingLanguage> languages, List<Framework> frameworks, List<Style> styles) {
+    public static TechStack of(List<TechStackElement> techStackElementList) {
         return TechStack.builder()
-                .languages(languages)
-                .frameworks(frameworks)
-                .styles(styles)
+                .techStackElmentList(techStackElementList)
                 .build();
     }
 
     @Builder
-    private TechStack(List<ProgrammingLanguage> languages, List<Framework> frameworks, List<Style> styles) {
-        this.languages = languages;
-        this.frameworks = frameworks;
-        this.styles = styles;
+    private TechStack(List<TechStackElement> techStackElmentList) {
+        this.techStackElmentList = techStackElmentList;
     }
 }

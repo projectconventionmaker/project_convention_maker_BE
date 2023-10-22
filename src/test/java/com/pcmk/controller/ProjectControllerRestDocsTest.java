@@ -31,10 +31,8 @@ import com.pcmk.domain.project.commitconvention.CommitConvention;
 import com.pcmk.domain.project.commitconvention.CommitConventionItem;
 import com.pcmk.domain.project.groundrule.GroundRule;
 import com.pcmk.domain.project.groundrule.GroundRuleItem;
-import com.pcmk.domain.project.techstack.Framework;
-import com.pcmk.domain.project.techstack.ProgrammingLanguage;
-import com.pcmk.domain.project.techstack.Style;
 import com.pcmk.domain.project.techstack.TechStack;
+import com.pcmk.domain.project.techstack.TechStackElement;
 import com.pcmk.dto.project.ProjectDTO;
 import com.pcmk.dto.project.ProjectDTO.ProjectDetail;
 import com.pcmk.dto.project.request.CodeConventionUpdateRequestDTO;
@@ -42,7 +40,8 @@ import com.pcmk.dto.project.request.CommitConventionUpdateRequestDTO;
 import com.pcmk.dto.project.request.GroundRuleUpdateRequestDTO;
 import com.pcmk.dto.project.request.ProjectCreateRequestDTO;
 import com.pcmk.dto.project.request.ProjectUpdateRequestDTO;
-import com.pcmk.dto.project.request.TechStackUpdateRequestDTO;
+import com.pcmk.dto.project.request.techstack.TechStackUpdateRequestDTO;
+import com.pcmk.dto.project.response.TechStackUpdateResponseDTO;
 import com.pcmk.infra.test.AbstractRestDocsTest;
 import com.pcmk.service.project.ProjectService;
 import java.util.ArrayList;
@@ -158,19 +157,6 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
         commitConventionItems.add(new CommitConventionItem("[fix]: 버그,오류 수정", true));
         commitConventionItems.add(new CommitConventionItem("[refactor]: 코드 리팩토링:", true));
 
-        List<Framework> frameworks = new ArrayList<>();
-        frameworks.add(new Framework("Spring"));
-        frameworks.add(new Framework("FastAPI"));
-        frameworks.add(new Framework("Django"));
-
-        List<Style> styles = new ArrayList<>();
-        styles.add(new Style("Bootstrap"));
-
-        List<ProgrammingLanguage> languages = new ArrayList<>();
-        languages.add(new ProgrammingLanguage("Java"));
-        languages.add(new ProgrammingLanguage("Kotlin"));
-        languages.add(new ProgrammingLanguage("Golang"));
-
         List<GroundRuleItem> items = new ArrayList<>();
         items.add(new GroundRuleItem("님 금지! 극 존대 금지!", true));
         items.add(new GroundRuleItem("ZEP에서 캠은 켜지 않을 거에요", false));
@@ -178,7 +164,6 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
 
         ProjectDTO response = ProjectDTO.builder()
                 .projectDetail(ProjectDetail.of(projectEntity))
-                .techStack(TechStack.of(languages, frameworks, styles))
                 .groundRule(GroundRule.of(items))
                 .codeConvention(CodeConvention.of(codeConventionItems))
                 .commitConvention(CommitConvention.of(commitConventionItems))
@@ -336,70 +321,38 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
     @DisplayName("수정: 프로젝트 기술스택")
     void updateTechStack_restDocs() throws Exception {
         //given
-        List<Framework> frameworks = new ArrayList<>();
-        frameworks.add(new Framework("Spring"));
-        frameworks.add(new Framework("FastAPI"));
-        frameworks.add(new Framework("Django"));
 
-        List<Style> styles = new ArrayList<>();
-        styles.add(new Style("Bootstrap"));
+        //given data
+        List<TechStackElement> techStackElementList = new ArrayList<>();
+        techStackElementList.add(TechStackElement.of("Language", List.of("Java", "Kotlin", "Golang")));
+        techStackElementList.add(
+                TechStackElement.of("DB", List.of("MySQL", "MariaDB", "DynamoDB", "MongoDB", "Redis")));
+        techStackElementList.add(TechStackElement.of("Framework", List.of("Spring", "FastAPI", "Django")));
 
-        List<ProgrammingLanguage> languages = new ArrayList<>();
-        languages.add(new ProgrammingLanguage("Java"));
-        languages.add(new ProgrammingLanguage("Kotlin"));
-        languages.add(new ProgrammingLanguage("Golang"));
+        TechStack techStack = TechStack.of(techStackElementList);
 
-        TechStackUpdateRequestDTO request = TechStackUpdateRequestDTO.builder()
-                .frameworks(frameworks)
-                .languages(languages)
-                .styles(styles)
-                .build();
+        TechStackUpdateRequestDTO request = TechStackUpdateRequestDTO.of(techStack);
 
-        TechStack techStack = TechStack.of(languages, frameworks, styles);
-
-        ProjectEntity projectEntity = ProjectEntity.builder()
-                .projectName(PROJECT_NAME)
-                .projectUUID(PROJECT_UUID)
-                .teamName(TEAM_NAME)
-                .detail(PROJECT_DETAIL)
-                .introduction(PROJECT_INTRODUCTION)
-                .build();
-
-        ProjectDTO response = ProjectDTO.builder()
-                .projectDetail(ProjectDetail.of(projectEntity))
-                .techStack(techStack)
-                .build();
+        TechStackUpdateResponseDTO response = TechStackUpdateResponseDTO.of(techStack);
 
         BDDMockito.given(projectService.updateTechStack(PROJECT_UUID, request))
                 .willReturn(response);
 
+        //given restdocs
         var parameterDescriptors = new ParameterDescriptor[]{
                 parameterWithName("projectUUID").description("(Required) UUID")
         };
 
         var requestFieldDescription = new FieldDescriptor[]{
-                fieldWithPath("languages").type(ARRAY).description("(Required) 언어"),
-                fieldWithPath("languages[].name").type(STRING).description("(Required) 언어 이름"),
-                fieldWithPath("frameworks").type(ARRAY).description("(Required) 프레임워크"),
-                fieldWithPath("frameworks[].name").type(STRING).description("(Required) 프레임워크 이름"),
-                fieldWithPath("styles").type(ARRAY).description("(Required) 스타일"),
-                fieldWithPath("styles[].name").type(STRING).description("(Required) 스타일 이름")
+                fieldWithPath("tech_stack").type(ARRAY).description("(Required) 테크 스택 리스트"),
+                fieldWithPath("tech_stack[].category").type(STRING).description("(Required) 스택 카테고리"),
+                fieldWithPath("tech_stack[].names").type(ARRAY).description("(Required) 기술 이름")
         };
 
         var responseFieldDescription = new FieldDescriptor[]{
-                fieldWithPath("project_detail").type(OBJECT).description("이름"),
-                fieldWithPath("project_detail.project_name").type(STRING).description("프로젝트명"),
-                fieldWithPath("project_detail.project_uuid").type(STRING).description("UUID"),
-                fieldWithPath("project_detail.team_name").type(STRING).description("(Nullable) 팀명"),
-                fieldWithPath("project_detail.introduction").type(STRING).description("(Nullable) 프로젝트 한 줄 소개"),
-                fieldWithPath("project_detail.detail").type(STRING).description("(Nullable)  프로젝트 상세"),
-                fieldWithPath("tech_stack").type(OBJECT).description("기술 스택"),
-                fieldWithPath("tech_stack.languages").type(ARRAY).description("언어"),
-                fieldWithPath("tech_stack.languages[].name").type(STRING).description("언어 이름"),
-                fieldWithPath("tech_stack.frameworks").type(ARRAY).description("프레임워크"),
-                fieldWithPath("tech_stack.frameworks[].name").type(STRING).description("프레임워크 이름"),
-                fieldWithPath("tech_stack.styles").type(ARRAY).description("스타일"),
-                fieldWithPath("tech_stack.styles[].name").type(STRING).description("스타일 이름")
+                fieldWithPath("tech_stack").type(ARRAY).description("테크 스택 리스트"),
+                fieldWithPath("tech_stack[].category").type(STRING).description("스택 카테고리"),
+                fieldWithPath("tech_stack[].names").type(ARRAY).description("기술 이름")
         };
 
         String identifier = "put-v1-update-project-tech-stack";

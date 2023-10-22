@@ -6,7 +6,8 @@ import com.pcmk.dto.project.request.CommitConventionUpdateRequestDTO;
 import com.pcmk.dto.project.request.GroundRuleUpdateRequestDTO;
 import com.pcmk.dto.project.request.ProjectCreateRequestDTO;
 import com.pcmk.dto.project.request.ProjectUpdateRequestDTO;
-import com.pcmk.dto.project.request.TechStackUpdateRequestDTO;
+import com.pcmk.dto.project.request.techstack.TechStackUpdateRequestDTO;
+import com.pcmk.dto.project.response.TechStackUpdateResponseDTO;
 import com.pcmk.service.project.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -42,8 +43,8 @@ public class ProjectController {
     }
 
     @PutMapping("/{projectUUID}/tech-stack")
-    public ProjectDTO updateTechStack(@PathVariable String projectUUID,
-                                      @RequestBody @Validated TechStackUpdateRequestDTO techStackUpdateRequestDTO) {
+    public TechStackUpdateResponseDTO updateTechStack(@PathVariable String projectUUID,
+                                                      @RequestBody @Validated TechStackUpdateRequestDTO techStackUpdateRequestDTO) {
         return projectService.updateTechStack(projectUUID, techStackUpdateRequestDTO);
     }
 

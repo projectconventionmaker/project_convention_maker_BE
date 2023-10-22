@@ -14,7 +14,8 @@ import com.pcmk.dto.project.request.CodeConventionUpdateRequestDTO;
 import com.pcmk.dto.project.request.CommitConventionUpdateRequestDTO;
 import com.pcmk.dto.project.request.GroundRuleUpdateRequestDTO;
 import com.pcmk.dto.project.request.ProjectUpdateRequestDTO;
-import com.pcmk.dto.project.request.TechStackUpdateRequestDTO;
+import com.pcmk.dto.project.request.techstack.TechStackUpdateRequestDTO;
+import com.pcmk.dto.project.response.TechStackUpdateResponseDTO;
 import com.pcmk.exception.CustomException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -64,13 +65,13 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectDTO updateTechStack(String projectUuid, TechStackUpdateRequestDTO techStackUpdateRequestDTO) {
+    public TechStackUpdateResponseDTO updateTechStack(String projectUuid,
+                                                      TechStackUpdateRequestDTO techStackUpdateRequestDTO) {
         ProjectEntity projectEntity = findOrException(projectUuid);
-        TechStack updatedTechStack = TechStack.of(techStackUpdateRequestDTO.getLanguages(),
-                techStackUpdateRequestDTO.getFrameworks(), techStackUpdateRequestDTO.getStyles());
+        TechStack updatedTechStack = TechStack.of(techStackUpdateRequestDTO.toTechList());
         projectEntity.updateTechStack(updatedTechStack);
         projectRepository.save(projectEntity);
-        return ProjectDTO.fromEntity(projectEntity);
+        return TechStackUpdateResponseDTO.of(projectEntity.getTechStack());
     }
 
     @Transactional
