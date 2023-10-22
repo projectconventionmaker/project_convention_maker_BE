@@ -25,6 +25,8 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.pcmk.controller.project.ProjectController;
 import com.pcmk.domain.project.ProjectEntity;
+import com.pcmk.domain.project.teammate.Teammate;
+import com.pcmk.domain.project.teammate.TeammateElement;
 import com.pcmk.dto.project.codeconvention.CodeConventionDTO;
 import com.pcmk.dto.project.codeconvention.CodeConventionElementDTO;
 import com.pcmk.dto.project.codeconvention.CodeConventionElementItemDTO;
@@ -40,11 +42,13 @@ import com.pcmk.dto.project.project.ProjectCreateResponseDTO;
 import com.pcmk.dto.project.project.ProjectDetailDTO;
 import com.pcmk.dto.project.project.ProjectGetResponseDTO;
 import com.pcmk.dto.project.project.ProjectUpdateRequestDTO;
+import com.pcmk.dto.project.teammate.TeammateElementDTO;
 import com.pcmk.dto.project.techstack.TechStackDTO;
 import com.pcmk.dto.project.techstack.TechStackElementDTO;
 import com.pcmk.dto.project.techstack.TechStackUpdateRequestDTO;
 import com.pcmk.infra.test.AbstractRestDocsTest;
 import com.pcmk.service.project.ProjectService;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -90,10 +94,11 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
         var responseFieldDescription = new FieldDescriptor[]{
                 fieldWithPath("project_detail").type(OBJECT).description("이름"),
                 fieldWithPath("project_detail.project_name").type(STRING).description("프로젝트명"),
-                fieldWithPath("project_detail.project_uuid").type(STRING).description("프로젝트명 UUID"),
+                fieldWithPath("project_detail.project_uuid").type(STRING).description("프로젝트 UUID"),
                 fieldWithPath("project_detail.team_name").type(NULL).description("(Nullable) 팀명"),
                 fieldWithPath("project_detail.introduction").type(NULL).description("(Nullable) 프로젝트 한 줄 소개"),
-                fieldWithPath("project_detail.detail").type(NULL).description("(Nullable)  프로젝트 상세")
+                fieldWithPath("project_detail.detail").type(NULL).description("(Nullable)  프로젝트 상세"),
+                fieldWithPath("project_detail.teammates").type(NULL).description("(Nullable)  프로젝트 팀원")
         };
 
         String identifier = "post-v1-create-project";
@@ -136,16 +141,24 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
     void getProject_restDocs() throws Exception {
         //given
 
-        // ProjectDetail
+        //Teammate
+        List<TeammateElement> teammateElements = new ArrayList<>();
+        teammateElements.add(TeammateElement.of("name1", "백엔드", "https://www.link.com"));
+        teammateElements.add(TeammateElement.of("name2", "백엔드", "https://www.link.com"));
+        teammateElements.add(TeammateElement.of("name3", "백엔드", "https://www.link.com"));
+        Teammate teammate = Teammate.of(teammateElements);
+
+        //ProjectDetail
         ProjectDetailDTO projectDetail = ProjectDetailDTO.fromEntity(ProjectEntity.builder()
                 .projectName(PROJECT_NAME)
                 .projectUUID(PROJECT_UUID)
                 .teamName("Boiler Plate")
                 .introduction("프로젝트 한 줄 소개")
                 .detail("프로젝트 상세 정보")
+                .teammate(teammate)
                 .build());
 
-        // TechStack
+        //TechStack
         List<TechStackElementDTO> techStackElements = new ArrayList<>();
         techStackElements.add(TechStackElementDTO.of("Language", List.of("Java", "Kotlin", "Golang")));
         techStackElements.add(
@@ -153,14 +166,14 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
         techStackElements.add(TechStackElementDTO.of("Framework", List.of("Spring", "FastAPI", "Django")));
         TechStackDTO techStackDTO = TechStackDTO.of(techStackElements);
 
-        // GroundRUle
+        //GroundRule
         List<GroundRuleElementDTO> groundRuleElements = new ArrayList<>();
         groundRuleElements.add(GroundRuleElementDTO.of("님 금지! 극 존대 금지!", true));
         groundRuleElements.add(GroundRuleElementDTO.of("ZEP에서 캠은 켜지 않을 거에요", false));
         groundRuleElements.add(GroundRuleElementDTO.of("스프린트는 협업과 프로세스를 배우는 시간이지 포트폴리오나 사이드 프로젝트를 하는 시간이 아닙니다", true));
         GroundRuleDTO groundRuleDTO = GroundRuleDTO.of(groundRuleElements);
 
-        // CodeConvention
+        //CodeConvention
         List<CodeConventionElementItemDTO> codeConventionItems = new ArrayList<>();
         codeConventionItems.add(CodeConventionElementItemDTO.of("클래스명은 카멜케이스로 만든다", "CamelCase"));
         codeConventionItems.add(CodeConventionElementItemDTO.of("메서드명은 동사로 시작한다", "updateCodeConvention"));
@@ -168,7 +181,7 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
                 CodeConventionElementDTO.of("자바 네이밍", codeConventionItems));
         CodeConventionDTO codeConventionDTO = CodeConventionDTO.of(codeConventionElements);
 
-        // CommitConvention
+        //CommitConvention
         List<CommitConventionElementDTO> commitElements = new ArrayList<>();
         commitElements.add(CommitConventionElementDTO.of("[feat]: 기능 추가,삭제, 변경", true));
         commitElements.add(CommitConventionElementDTO.of("[fix]: 버그,오류 수정", true));
@@ -187,7 +200,7 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
                 .willReturn(response);
 
         var parameterDescriptors = new ParameterDescriptor[]{
-                parameterWithName("projectUUID").description("(Required) UUID")
+                parameterWithName("projectId").description("(Required) 프로젝트명 or 프로젝트 UUID")
         };
 
         String identifier = "get-v1-get-project";
@@ -202,7 +215,11 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
                 fieldWithPath("project_detail.project_uuid").type(STRING).description("프로젝트명 UUID"),
                 fieldWithPath("project_detail.team_name").type(STRING).description("(Nullable) 팀명"),
                 fieldWithPath("project_detail.introduction").type(STRING).description("(Nullable) 프로젝트 한 줄 소개"),
-                fieldWithPath("project_detail.detail").type(STRING).description("(Nullable)  프로젝트 상세"),
+                fieldWithPath("project_detail.detail").type(STRING).description("(Nullable) 프로젝트 상세"),
+                fieldWithPath("project_detail.teammates").type(ARRAY).description("(Nullable) 프로젝트 팀원"),
+                fieldWithPath("project_detail.teammates[].name").type(STRING).description("(Nullable) 팀원명"),
+                fieldWithPath("project_detail.teammates[].position").type(STRING).description("(Nullable) 팀원 포지션"),
+                fieldWithPath("project_detail.teammates[].link").type(STRING).description("(Nullable) 팀원 링크"),
 
                 fieldWithPath("tech_stack").type(OBJECT).description("(Nullable) 테크 스택"),
                 fieldWithPath("tech_stack.elements").type(ARRAY).description("(Nullable) 스택 리스트"),
@@ -225,12 +242,12 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
                 fieldWithPath("code_convention.elements[].category").type(STRING).description("(Nullable) 카테고리명"),
                 fieldWithPath("code_convention.elements[].items").type(ARRAY).description("(Nullable) 컨벤션 항목"),
                 fieldWithPath("code_convention.elements[].items[].name").type(STRING).description("(Nullable) 항목명"),
-                fieldWithPath("code_convention.elements[].items[].example").type(STRING).description("(Nullable) 얘시")
+                fieldWithPath("code_convention.elements[].items[].example").type(STRING).description("(Nullable) 예시")
         };
 
         //when //then
         mockMvc.perform(
-                        get("/api/v1/projects/{projectUUID}", PROJECT_UUID))
+                        get("/api/v1/projects/{projectId}", PROJECT_UUID))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document(identifier,
@@ -257,28 +274,37 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
     @DisplayName("수정: 프로젝트 개요")
     void updateProject_restDocs() throws Exception {
         //given
+        //Teammate
+        List<TeammateElementDTO> teammateElementDTOs = new ArrayList<>();
+        teammateElementDTOs.add(TeammateElementDTO.of("name1", "백엔드", "https://www.link.com"));
+        teammateElementDTOs.add(TeammateElementDTO.of("name2", "프론트엔드", "https://www.link.com"));
+        teammateElementDTOs.add(TeammateElementDTO.of("name3", "디자이너", "https://www.link.com"));
+
         ProjectUpdateRequestDTO request = ProjectUpdateRequestDTO.builder()
                 .projectName("Changed project name")
                 .teamName("Changed team name")
                 .introduction("Changed project introduction")
                 .detail("Change project detail")
+                .teammateElementDTOs(teammateElementDTOs)
+                .startAt(LocalDate.now())
+                .endAt(LocalDate.now().plusDays(5))
                 .build();
 
         var parameterDescriptors = new ParameterDescriptor[]{
-                parameterWithName("projectUUID").description("(Required) UUID")
+                parameterWithName("projectId").description("(Required) 프로젝트명 or 프로젝트 UUID")
         };
 
         String identifier = "put-v1-update-project";
         String summary = "프로젝트 개요 수정 API";
         String description = """
                 - 필수값 비어있는 경우 400 에러 코드
-                - 존재하지 않는 프로젝트 UUID로 요청시 1000 에러 코드
+                - 존재하지 않는 프로젝트명, UUID로 요청시 1000 에러 코드
                 - 변경된 프로젝트명이 사용중인 경우 1001 에러 코드
                 """;
 
         //when //then
         mockMvc.perform(
-                        put("/api/v1/projects/{projectUUID}", PROJECT_UUID)
+                        put("/api/v1/projects/{projectId}", PROJECT_UUID)
                                 .contentType(APPLICATION_JSON)
                                 .content(body(request))
                 )
@@ -314,7 +340,7 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
 
         //given restdocs
         var parameterDescriptors = new ParameterDescriptor[]{
-                parameterWithName("projectUUID").description("(Required) UUID")
+                parameterWithName("projectId").description("(Required) 프로젝트명 or 프로젝트 UUID")
         };
 
         var requestFieldDescription = new FieldDescriptor[]{
@@ -332,7 +358,7 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
 
         //when //then
         mockMvc.perform(
-                        put("/api/v1/projects/{projectUUID}/tech-stack", PROJECT_UUID)
+                        put("/api/v1/projects/{projectId}/tech-stack", PROJECT_UUID)
                                 .contentType(APPLICATION_JSON)
                                 .content(body(request))
                 )
@@ -368,7 +394,7 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
         GroundRuleUpdateRequestDTO request = GroundRuleUpdateRequestDTO.of(elementDTOs);
 
         var parameterDescriptors = new ParameterDescriptor[]{
-                parameterWithName("projectUUID").description("(Required) UUID")
+                parameterWithName("projectId").description("(Required) 프로젝트명 or 프로젝트 UUID")
         };
 
         var requestFieldDescription = new FieldDescriptor[]{
@@ -386,7 +412,7 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
 
         //when //then
         mockMvc.perform(
-                        put("/api/v1/projects/{projectUUID}/ground-rules", PROJECT_UUID)
+                        put("/api/v1/projects/{projectId}/ground-rules", PROJECT_UUID)
                                 .contentType(APPLICATION_JSON)
                                 .content(body(request))
                 )
@@ -422,7 +448,7 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
         CommitConventionUpdateRequestDTO request = CommitConventionUpdateRequestDTO.of(elementDTOs);
 
         var parameterDescriptors = new ParameterDescriptor[]{
-                parameterWithName("projectUUID").description("(Required) UUID")
+                parameterWithName("projectId").description("(Required) 프로젝트명 or 프로젝트 UUID")
         };
 
         var requestFieldDescription = new FieldDescriptor[]{
@@ -440,7 +466,7 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
 
         //when //then
         mockMvc.perform(
-                        put("/api/v1/projects/{projectUUID}/commit-conventions", PROJECT_UUID)
+                        put("/api/v1/projects/{projectId}/commit-conventions", PROJECT_UUID)
                                 .contentType(APPLICATION_JSON)
                                 .content(body(request))
                 )
@@ -484,7 +510,7 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
         CodeConventionUpdateRequestDTO request = CodeConventionUpdateRequestDTO.of(elementDTOs);
 
         var parameterDescriptors = new ParameterDescriptor[]{
-                parameterWithName("projectUUID").description("(Required) UUID")
+                parameterWithName("projectId").description("(Required) 프로젝트명 or 프로젝트 UUID")
         };
 
         var requestFieldDescription = new FieldDescriptor[]{
@@ -492,7 +518,7 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
                 fieldWithPath("code_conventions[].category").type(STRING).description("(Required) 카테고리명"),
                 fieldWithPath("code_conventions[].items").type(ARRAY).description("(Required) 컨벤션 항목"),
                 fieldWithPath("code_conventions[].items[].name").type(STRING).description("(Required) 항목명"),
-                fieldWithPath("code_conventions[].items[].example").type(STRING).description("(Required) 얘시")
+                fieldWithPath("code_conventions[].items[].example").type(STRING).description("(Required) 예시")
         };
 
         String identifier = "put-v1-update-project-code-conventions";
@@ -504,7 +530,7 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
 
         //when //then
         mockMvc.perform(
-                        put("/api/v1/projects/{projectUUID}/code-conventions", PROJECT_UUID)
+                        put("/api/v1/projects/{projectId}/code-conventions", PROJECT_UUID)
                                 .contentType(APPLICATION_JSON)
                                 .content(body(request))
                 )
