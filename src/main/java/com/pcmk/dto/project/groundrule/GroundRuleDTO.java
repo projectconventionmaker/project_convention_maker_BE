@@ -16,7 +16,7 @@ public class GroundRuleDTO {
     List<GroundRuleElementDTO> elementDTOs;
 
     public static GroundRuleDTO fromEntity(ProjectEntity entity) {
-        if (Objects.isNull(entity.getCodeConvention()) || Objects.isNull(entity.getCodeConvention().getElements())) {
+        if (Objects.isNull(entity.getGroundRule()) || Objects.isNull(entity.getGroundRule().getElements())) {
             return null;
         }
 
