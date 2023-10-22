@@ -8,16 +8,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class CommitConvention {
-    List<CommitConventionItem> items;
 
-    public static CommitConvention of(List<CommitConventionItem> items) {
+    List<CommitConventionElement> elements;
+
+    public static CommitConvention of(List<CommitConventionElement> elements) {
         return CommitConvention.builder()
-                .items(items)
+                .elements(elements)
                 .build();
     }
 
     @Builder
-    private CommitConvention(List<CommitConventionItem> items) {
-        this.items = items;
+    private CommitConvention(List<CommitConventionElement> elements) {
+        this.elements = elements;
     }
 }

@@ -8,16 +8,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class GroundRule {
-    List<GroundRuleItem> items;
 
-    public static GroundRule of(List<GroundRuleItem> items) {
+    List<GroundRuleElement> elements;
+
+    public static GroundRule of(List<GroundRuleElement> elements) {
         return GroundRule.builder()
-                .items(items)
+                .elements(elements)
                 .build();
     }
 
     @Builder
-    private GroundRule(List<GroundRuleItem> items) {
-        this.items = items;
+    private GroundRule(List<GroundRuleElement> elements) {
+        this.elements = elements;
     }
 }
