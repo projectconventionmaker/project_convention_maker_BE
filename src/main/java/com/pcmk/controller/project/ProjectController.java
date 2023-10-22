@@ -1,16 +1,16 @@
 package com.pcmk.controller.project;
 
-import com.pcmk.dto.project.ProjectDTO;
-import com.pcmk.dto.project.request.CommitConventionUpdateRequestDTO;
-import com.pcmk.dto.project.request.codeconvention.CodeConventionUpdateRequestDTO;
-import com.pcmk.dto.project.request.groundrule.GroundRuleUpdateRequestDTO;
-import com.pcmk.dto.project.request.project.ProjectCreateRequestDTO;
-import com.pcmk.dto.project.request.project.ProjectUpdateRequestDTO;
-import com.pcmk.dto.project.request.techstack.TechStackUpdateRequestDTO;
-import com.pcmk.dto.project.response.TechStackUpdateResponseDTO;
-import com.pcmk.dto.project.response.codeconvention.CodeConventionUpdateResponseDTO;
+import com.pcmk.dto.project.codeconvention.CodeConventionUpdateRequestDTO;
+import com.pcmk.dto.project.commitconvention.CommitConventionUpdateRequestDTO;
+import com.pcmk.dto.project.groundrule.GroundRuleUpdateRequestDTO;
+import com.pcmk.dto.project.project.ProjectCreateRequestDTO;
+import com.pcmk.dto.project.project.ProjectCreateResponseDTO;
+import com.pcmk.dto.project.project.ProjectGetResponseDTO;
+import com.pcmk.dto.project.project.ProjectUpdateRequestDTO;
+import com.pcmk.dto.project.techstack.TechStackUpdateRequestDTO;
 import com.pcmk.service.project.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,42 +28,48 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping
-    public ProjectDTO createProject(@RequestBody @Validated ProjectCreateRequestDTO projectCreateRequestDTO) {
+    public ProjectCreateResponseDTO createProject(
+            @RequestBody @Validated ProjectCreateRequestDTO projectCreateRequestDTO) {
         return projectService.createProject(projectCreateRequestDTO.getProjectName());
     }
 
     @GetMapping("/{projectUUID}")
-    public ProjectDTO getProject(@PathVariable String projectUUID) {
+    public ProjectGetResponseDTO getProject(@PathVariable String projectUUID) {
         return projectService.getProject(projectUUID);
     }
 
     @PutMapping("/{projectUUID}")
-    public ProjectDTO updateProject(@PathVariable String projectUUID,
-                                    @RequestBody @Validated ProjectUpdateRequestDTO projectUpdateRequestDTO) {
-        return projectService.updateProject(projectUUID, projectUpdateRequestDTO);
+    public ResponseEntity<Void> updateProject(@PathVariable String projectUUID,
+                                              @RequestBody @Validated ProjectUpdateRequestDTO projectUpdateRequestDTO) {
+        projectService.updateProject(projectUUID, projectUpdateRequestDTO);
+        return ResponseEntity.ok(null);
     }
 
     @PutMapping("/{projectUUID}/tech-stack")
-    public TechStackUpdateResponseDTO updateTechStack(@PathVariable String projectUUID,
-                                                      @RequestBody @Validated TechStackUpdateRequestDTO techStackUpdateRequestDTO) {
-        return projectService.updateTechStack(projectUUID, techStackUpdateRequestDTO);
+    public ResponseEntity<Void> updateTechStack(@PathVariable String projectUUID,
+                                                @RequestBody @Validated TechStackUpdateRequestDTO techStackUpdateRequestDTO) {
+        projectService.updateTechStack(projectUUID, techStackUpdateRequestDTO);
+        return ResponseEntity.ok(null);
     }
 
     @PutMapping("/{projectUUID}/ground-rules")
-    public ProjectDTO updateGroundRules(@PathVariable String projectUUID,
-                                        @RequestBody @Validated GroundRuleUpdateRequestDTO groundRuleUpdateRequestDTO) {
-        return projectService.updateGroundRule(projectUUID, groundRuleUpdateRequestDTO);
+    public ResponseEntity<Void> updateGroundRules(@PathVariable String projectUUID,
+                                                  @RequestBody @Validated GroundRuleUpdateRequestDTO groundRuleUpdateRequestDTO) {
+        projectService.updateGroundRule(projectUUID, groundRuleUpdateRequestDTO);
+        return ResponseEntity.ok(null);
     }
 
     @PutMapping("/{projectUUID}/commit-conventions")
-    public ProjectDTO updateCommitConventions(@PathVariable String projectUUID,
-                                              @RequestBody @Validated CommitConventionUpdateRequestDTO commitConventionUpdateRequestDTO) {
-        return projectService.updateCommitConvention(projectUUID, commitConventionUpdateRequestDTO);
+    public ResponseEntity<Void> updateCommitConventions(@PathVariable String projectUUID,
+                                                        @RequestBody @Validated CommitConventionUpdateRequestDTO commitConventionUpdateRequestDTO) {
+        projectService.updateCommitConvention(projectUUID, commitConventionUpdateRequestDTO);
+        return ResponseEntity.ok(null);
     }
 
     @PutMapping("/{projectUUID}/code-conventions")
-    public CodeConventionUpdateResponseDTO updateCodeConventions(@PathVariable String projectUUID,
-                                                                 @RequestBody @Validated CodeConventionUpdateRequestDTO codeConventionUpdateRequestDTO) {
-        return projectService.updateCodeConvention(projectUUID, codeConventionUpdateRequestDTO);
+    public ResponseEntity<Void> updateCodeConventions(@PathVariable String projectUUID,
+                                                      @RequestBody @Validated CodeConventionUpdateRequestDTO codeConventionUpdateRequestDTO) {
+        projectService.updateCodeConvention(projectUUID, codeConventionUpdateRequestDTO);
+        return ResponseEntity.ok(null);
     }
 }

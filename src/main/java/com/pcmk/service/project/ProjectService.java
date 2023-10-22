@@ -5,18 +5,13 @@ import static com.pcmk.exception.CustomExceptionError.PROJECT_NOT_FOUND;
 
 import com.pcmk.domain.project.ProjectEntity;
 import com.pcmk.domain.project.ProjectRepository;
-import com.pcmk.domain.project.codeconvention.CodeConvention;
-import com.pcmk.domain.project.commitconvention.CommitConvention;
-import com.pcmk.domain.project.groundrule.GroundRule;
-import com.pcmk.domain.project.techstack.TechStack;
-import com.pcmk.dto.project.ProjectDTO;
-import com.pcmk.dto.project.request.CommitConventionUpdateRequestDTO;
-import com.pcmk.dto.project.request.codeconvention.CodeConventionUpdateRequestDTO;
-import com.pcmk.dto.project.request.groundrule.GroundRuleUpdateRequestDTO;
-import com.pcmk.dto.project.request.project.ProjectUpdateRequestDTO;
-import com.pcmk.dto.project.request.techstack.TechStackUpdateRequestDTO;
-import com.pcmk.dto.project.response.TechStackUpdateResponseDTO;
-import com.pcmk.dto.project.response.codeconvention.CodeConventionUpdateResponseDTO;
+import com.pcmk.dto.project.codeconvention.CodeConventionUpdateRequestDTO;
+import com.pcmk.dto.project.commitconvention.CommitConventionUpdateRequestDTO;
+import com.pcmk.dto.project.groundrule.GroundRuleUpdateRequestDTO;
+import com.pcmk.dto.project.project.ProjectCreateResponseDTO;
+import com.pcmk.dto.project.project.ProjectGetResponseDTO;
+import com.pcmk.dto.project.project.ProjectUpdateRequestDTO;
+import com.pcmk.dto.project.techstack.TechStackUpdateRequestDTO;
 import com.pcmk.exception.CustomException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -32,77 +27,67 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
 
 
-    public ProjectDTO getProject(String projectUuid) {
+    public ProjectGetResponseDTO getProject(String projectUuid) {
         ProjectEntity projectEntity = findOrException(projectUuid);
-        return ProjectDTO.fromEntity(projectEntity);
+        return ProjectGetResponseDTO.fromEntity(projectEntity);
     }
 
     @Transactional
-    public ProjectDTO createProject(String projectName) {
+    public ProjectCreateResponseDTO createProject(String projectName) {
         try {
             ensureProjectNameIsUnique(projectName);
             ProjectEntity save = projectRepository.save(buildProjectEntity(projectName));
-            return ProjectDTO.fromEntity(save);
+            return ProjectCreateResponseDTO.fromEntity(save);
         } catch (DataIntegrityViolationException exception) {
             throw new CustomException(PROJECT_NAME_DUPLICATED);
         }
     }
 
     @Transactional
-    public ProjectDTO updateProject(String projectUuid, ProjectUpdateRequestDTO projectUpdateRequestDTO) {
+    public void updateProject(String projectUuid, ProjectUpdateRequestDTO dto) {
         ProjectEntity projectEntity = findOrException(projectUuid);
-        if (!projectUpdateRequestDTO.getProjectName().equals(projectEntity.getProjectName())) {
-            ensureProjectNameIsUnique(projectUpdateRequestDTO.getProjectName());
+
+        if (!dto.getProjectName().equals(projectEntity.getProjectName())) {
+            ensureProjectNameIsUnique(dto.getProjectName());
         }
 
         try {
-            ProjectEntity updated = buildUpdatedProjectEntity(projectUpdateRequestDTO);
-            projectEntity.updateProject(updated);
+            projectEntity.updateProject(dto.toEntity());
             projectRepository.save(projectEntity);
-            return ProjectDTO.fromEntity(projectEntity);
         } catch (DataIntegrityViolationException exception) {
             throw new CustomException(PROJECT_NAME_DUPLICATED);
         }
     }
 
     @Transactional
-    public TechStackUpdateResponseDTO updateTechStack(String projectUuid,
-                                                      TechStackUpdateRequestDTO techStackUpdateRequestDTO) {
+    public void updateTechStack(String projectUuid,
+                                TechStackUpdateRequestDTO dto) {
         ProjectEntity projectEntity = findOrException(projectUuid);
-        TechStack updatedTechStack = TechStack.of(techStackUpdateRequestDTO.toTechList());
-        projectEntity.updateTechStack(updatedTechStack);
+        projectEntity.updateTechStack(dto.toEntity());
         projectRepository.save(projectEntity);
-        return TechStackUpdateResponseDTO.of(projectEntity.getTechStack());
     }
 
     @Transactional
-    public ProjectDTO updateGroundRule(String projectUuid, GroundRuleUpdateRequestDTO groundRuleUpdateRequestDTO) {
+    public void updateGroundRule(String projectUuid, GroundRuleUpdateRequestDTO dto) {
         ProjectEntity projectEntity = findOrException(projectUuid);
-        GroundRule updatedGroundRule = GroundRule.of(groundRuleUpdateRequestDTO.getItems());
-        projectEntity.updateGroundRule(updatedGroundRule);
+        projectEntity.updateGroundRule(dto.toEntity());
         projectRepository.save(projectEntity);
-        return ProjectDTO.fromEntity(projectEntity);
     }
 
     @Transactional
-    public ProjectDTO updateCommitConvention(String projectUuid,
-                                             CommitConventionUpdateRequestDTO commitConventionUpdateRequestDTO) {
+    public void updateCommitConvention(String projectUuid,
+                                       CommitConventionUpdateRequestDTO dto) {
         ProjectEntity projectEntity = findOrException(projectUuid);
-        CommitConvention updatedCommitConvention = CommitConvention.of(commitConventionUpdateRequestDTO.getItems());
-        projectEntity.updateCommitConvention(updatedCommitConvention);
+        projectEntity.updateCommitConvention(dto.toEntity());
         projectRepository.save(projectEntity);
-        return ProjectDTO.fromEntity(projectEntity);
     }
 
     @Transactional
-    public CodeConventionUpdateResponseDTO updateCodeConvention(String projectUuid,
-                                                                CodeConventionUpdateRequestDTO codeConventionUpdateRequestDTO) {
+    public void updateCodeConvention(String projectUuid,
+                                     CodeConventionUpdateRequestDTO dto) {
         ProjectEntity projectEntity = findOrException(projectUuid);
-        CodeConvention updatedCodeConvention = CodeConvention.of(
-                codeConventionUpdateRequestDTO.toCodeConventionItemList());
-        projectEntity.updateCodeConvention(updatedCodeConvention);
+        projectEntity.updateCodeConvention(dto.toEntity());
         projectRepository.save(projectEntity);
-        return CodeConventionUpdateResponseDTO.of(projectEntity.getCodeConvention());
     }
 
     private void ensureProjectNameIsUnique(String projectName) {
@@ -125,14 +110,5 @@ public class ProjectService {
 
     private String createUUID() {
         return UUID.randomUUID().toString();
-    }
-
-    private static ProjectEntity buildUpdatedProjectEntity(ProjectUpdateRequestDTO dto) {
-        return ProjectEntity.builder()
-                .projectName(dto.getProjectName())
-                .teamName(dto.getProjectName())
-                .introduction(dto.getIntroduction())
-                .detail(dto.getDetail())
-                .build();
     }
 }

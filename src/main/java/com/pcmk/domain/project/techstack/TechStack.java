@@ -9,16 +9,16 @@ import lombok.NoArgsConstructor;
 @Data
 public class TechStack {
 
-    private List<TechStackElement> techStackElmentList;
+    private List<TechStackElement> elements;
 
-    public static TechStack of(List<TechStackElement> techStackElementList) {
+    public static TechStack of(List<TechStackElement> elements) {
         return TechStack.builder()
-                .techStackElmentList(techStackElementList)
+                .elements(elements)
                 .build();
     }
 
     @Builder
-    private TechStack(List<TechStackElement> techStackElmentList) {
-        this.techStackElmentList = techStackElmentList;
+    private TechStack(List<TechStackElement> elements) {
+        this.elements = elements;
     }
 }

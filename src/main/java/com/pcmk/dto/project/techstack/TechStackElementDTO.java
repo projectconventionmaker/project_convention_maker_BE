@@ -1,4 +1,4 @@
-package com.pcmk.dto.project;
+package com.pcmk.dto.project.techstack;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
