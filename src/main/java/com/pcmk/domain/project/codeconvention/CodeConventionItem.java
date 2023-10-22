@@ -1,14 +1,28 @@
 package com.pcmk.domain.project.codeconvention;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
+import java.util.List;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class CodeConventionItem {
-    @NotBlank
-    private String name;
+
+    private String category;
+    private List<CodeConventionItemElement> codeConventionItemElementList;
+
+    public static CodeConventionItem of(String category,
+                                        List<CodeConventionItemElement> codeConventionItemElementList) {
+        return CodeConventionItem.builder()
+                .category(category)
+                .codeConventionItemElementList(codeConventionItemElementList)
+                .build();
+    }
+
+    @Builder
+    private CodeConventionItem(String category, List<CodeConventionItemElement> codeConventionItemElementList) {
+        this.category = category;
+        this.codeConventionItemElementList = codeConventionItemElementList;
+    }
 }
