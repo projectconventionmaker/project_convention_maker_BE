@@ -44,10 +44,10 @@ paths:
                         "detail" : null,
                         "project_name" : "Boiler Plate",
                         "team_name" : null,
-                        "project_uuid" : "94594015-dded-4f8e-96f1-d49835e88fe1",
+                        "project_uuid" : "eb187d80-9529-4db2-9904-b93c09f900ee",
                         "project_start" : null,
                         "project_end" : null,
-                        "teammates" : null
+                        "teammates" : [ ]
                       }
                     }
   /api/v1/projects/{projectId}:
@@ -81,9 +81,9 @@ paths:
                         "detail" : "프로젝트 상세 정보",
                         "project_name" : "Boiler Plate",
                         "team_name" : "Boiler Plate",
-                        "project_uuid" : "94594015-dded-4f8e-96f1-d49835e88fe1",
-                        "project_start" : "2023-10-22",
-                        "project_end" : "2023-10-27",
+                        "project_uuid" : "eb187d80-9529-4db2-9904-b93c09f900ee",
+                        "project_start" : [ 2023, 10, 23 ],
+                        "project_end" : [ 2023, 10, 28 ],
                         "teammates" : [ {
                           "name" : "name1",
                           "position" : "백엔드",
@@ -176,8 +176,8 @@ paths:
                     "team_name" : "Changed team name",
                     "introduction" : "Changed project introduction",
                     "detail" : "Change project detail",
-                    "project_start" : [ 2023, 10, 22 ],
-                    "project_end" : [ 2023, 10, 27 ],
+                    "project_start" : [ 2023, 10, 23 ],
+                    "project_end" : [ 2023, 10, 28 ],
                     "teammates" : [ {
                       "name" : "name1",
                       "position" : "백엔드",
@@ -378,6 +378,67 @@ components:
               checked:
                 type: boolean
                 description: (Required) 항목이 채택되었는지
+    CreateProjectResponse:
+      title: CreateProjectResponse
+      type: object
+      properties:
+        project_detail:
+          type: object
+          properties:
+            project_uuid:
+              type: string
+              description: 프로젝트 UUID
+            teammates:
+              type: array
+              description: (Nullable)  프로젝트 팀원
+              items:
+                oneOf:
+                - type: object
+                - type: boolean
+                - type: string
+                - type: number
+            project_name:
+              type: string
+              description: 프로젝트명
+          description: 이름
+    UpdateCommitConventionRequest:
+      title: UpdateCommitConventionRequest
+      type: object
+      properties:
+        code_conventions:
+          type: array
+          description: (Required) 커밋 컨벤션 항목
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: (Required) 항목 이름
+              checked:
+                type: boolean
+                description: (Required) 항목이 채택되었는지
+    UpdateTechStackRequest:
+      title: UpdateTechStackRequest
+      type: object
+      properties:
+        tech_stack:
+          type: array
+          description: (Required) 테크 스택 리스트
+          items:
+            type: object
+            properties:
+              names:
+                type: array
+                description: (Required) 기술 이름
+                items:
+                  oneOf:
+                  - type: object
+                  - type: boolean
+                  - type: string
+                  - type: number
+              category:
+                type: string
+                description: (Required) 스택 카테고리
     GetProjectResponse:
       title: GetProjectResponse
       type: object
@@ -467,11 +528,23 @@ components:
                     type: string
                     description: (Nullable) 팀원 포지션
             project_start:
-              type: string
+              type: array
               description: (Nullable) 프로젝트 시작 일자
+              items:
+                oneOf:
+                - type: object
+                - type: boolean
+                - type: string
+                - type: number
             project_end:
-              type: string
+              type: array
               description: (Nullable) 프로젝트 종료 일자
+              items:
+                oneOf:
+                - type: object
+                - type: boolean
+                - type: string
+                - type: number
             detail:
               type: string
               description: (Nullable) 프로젝트 상세
@@ -501,47 +574,13 @@ components:
                     type: boolean
                     description: (Nullable) 항목이 채택되었는지
           description: (Nullable) 커밋 컨벤션
-    UpdateCommitConventionRequest:
-      title: UpdateCommitConventionRequest
+    CreateProjectRequest:
+      title: CreateProjectRequest
       type: object
       properties:
-        code_conventions:
-          type: array
-          description: (Required) 커밋 컨벤션 항목
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: (Required) 항목 이름
-              checked:
-                type: boolean
-                description: (Required) 항목이 채택되었는지
-    UpdateTechStackRequest:
-      title: UpdateTechStackRequest
-      type: object
-      properties:
-        tech_stack:
-          type: array
-          description: (Required) 테크 스택 리스트
-          items:
-            type: object
-            properties:
-              names:
-                type: array
-                description: (Required) 기술 이름
-                items:
-                  oneOf:
-                  - type: object
-                  - type: boolean
-                  - type: string
-                  - type: number
-              category:
-                type: string
-                description: (Required) 스택 카테고리
-    UpdateProjectRequest:
-      title: UpdateProjectRequest
-      type: object
+        project_name:
+          type: string
+          description: (Required) 프로젝트명
     UpdateCodeConventionRequest:
       title: UpdateCodeConventionRequest
       type: object
@@ -567,24 +606,52 @@ components:
                     example:
                       type: string
                       description: (Required) 예시
-    CreateProjectRequest:
-      title: CreateProjectRequest
+    UpdateProjectRequest:
+      title: UpdateProjectRequest
       type: object
       properties:
+        teammates:
+          type: array
+          description: (Nullable) 프로젝트 팀원
+          items:
+            type: object
+            properties:
+              link:
+                type: string
+                description: (Nullable) 팀원 링크
+              name:
+                type: string
+                description: (Nullable) 팀원명
+              position:
+                type: string
+                description: (Nullable) 팀원 포지션
+        project_start:
+          type: array
+          description: (Required) 프로젝트 시작 날짜
+          items:
+            oneOf:
+            - type: object
+            - type: boolean
+            - type: string
+            - type: number
+        project_end:
+          type: array
+          description: (Required) 프로젝트 종료 날짜
+          items:
+            oneOf:
+            - type: object
+            - type: boolean
+            - type: string
+            - type: number
+        detail:
+          type: string
+          description: (Required) 프로젝트 세부 설명
         project_name:
           type: string
           description: (Required) 프로젝트명
-    CreateProjectResponse:
-      title: CreateProjectResponse
-      type: object
-      properties:
-        project_detail:
-          type: object
-          properties:
-            project_uuid:
-              type: string
-              description: 프로젝트 UUID
-            project_name:
-              type: string
-              description: 프로젝트명
-          description: 이름
+        introduction:
+          type: string
+          description: (Required) 프로젝트 한 줄 짧은 소개
+        team_name:
+          type: string
+          description: (Required) 팀 이름

@@ -3,6 +3,8 @@ package com.pcmk.dto.project.project;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pcmk.domain.project.ProjectEntity;
 import com.pcmk.dto.project.teammate.TeammateElementDTO;
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import lombok.Builder;
@@ -25,10 +27,10 @@ public class ProjectDetailDTO {
     private String introduction;
 
     @JsonProperty("project_start")
-    private String startAt;
+    private LocalDate startAt;
 
     @JsonProperty("project_end")
-    private String endAt;
+    private LocalDate endAt;
 
     private String detail;
 
@@ -48,14 +50,14 @@ public class ProjectDetailDTO {
         this.teamName = entity.getTeamName();
         this.introduction = entity.getIntroduction();
         this.detail = entity.getDetail();
-        this.startAt = entity.getStartAt() != null ? entity.getStartAt().toString() : null;
-        this.endAt = entity.getEndAt() != null ? entity.getEndAt().toString() : null;
+        this.startAt = entity.getStartAt();
+        this.endAt = entity.getEndAt();
         this.teammateElementDTOs = getTeammates(entity);
     }
 
     private List<TeammateElementDTO> getTeammates(ProjectEntity entity) {
         if (Objects.isNull(entity.getTeammate()) || Objects.isNull(entity.getTeammate().getElements())) {
-            return null;
+            return Collections.emptyList();
         }
         return entity.getTeammate().getElements().stream()
                 .map(element -> TeammateElementDTO.of(element.getName(), element.getPosition(), element.getLink()))
