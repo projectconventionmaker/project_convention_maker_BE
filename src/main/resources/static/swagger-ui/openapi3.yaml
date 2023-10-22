@@ -44,7 +44,9 @@ paths:
                         "detail" : null,
                         "project_name" : "Boiler Plate",
                         "team_name" : null,
-                        "project_uuid" : "42c22746-3327-4c45-80eb-ce07ed893d8a",
+                        "project_uuid" : "94594015-dded-4f8e-96f1-d49835e88fe1",
+                        "project_start" : null,
+                        "project_end" : null,
                         "teammates" : null
                       }
                     }
@@ -79,7 +81,9 @@ paths:
                         "detail" : "프로젝트 상세 정보",
                         "project_name" : "Boiler Plate",
                         "team_name" : "Boiler Plate",
-                        "project_uuid" : "42c22746-3327-4c45-80eb-ce07ed893d8a",
+                        "project_uuid" : "94594015-dded-4f8e-96f1-d49835e88fe1",
+                        "project_start" : "2023-10-22",
+                        "project_end" : "2023-10-27",
                         "teammates" : [ {
                           "name" : "name1",
                           "position" : "백엔드",
@@ -462,6 +466,12 @@ components:
                   position:
                     type: string
                     description: (Nullable) 팀원 포지션
+            project_start:
+              type: string
+              description: (Nullable) 프로젝트 시작 일자
+            project_end:
+              type: string
+              description: (Nullable) 프로젝트 종료 일자
             detail:
               type: string
               description: (Nullable) 프로젝트 상세

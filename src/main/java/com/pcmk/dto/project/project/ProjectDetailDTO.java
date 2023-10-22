@@ -3,7 +3,6 @@ package com.pcmk.dto.project.project;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pcmk.domain.project.ProjectEntity;
 import com.pcmk.dto.project.teammate.TeammateElementDTO;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import lombok.Builder;
@@ -25,11 +24,11 @@ public class ProjectDetailDTO {
 
     private String introduction;
 
-    @JsonProperty("start_at")
-    private LocalDate startAt;
+    @JsonProperty("project_start")
+    private String startAt;
 
-    @JsonProperty("end_at")
-    private LocalDate endAt;
+    @JsonProperty("project_end")
+    private String endAt;
 
     private String detail;
 
@@ -49,6 +48,8 @@ public class ProjectDetailDTO {
         this.teamName = entity.getTeamName();
         this.introduction = entity.getIntroduction();
         this.detail = entity.getDetail();
+        this.startAt = entity.getStartAt() != null ? entity.getStartAt().toString() : null;
+        this.endAt = entity.getEndAt() != null ? entity.getEndAt().toString() : null;
         this.teammateElementDTOs = getTeammates(entity);
     }
 

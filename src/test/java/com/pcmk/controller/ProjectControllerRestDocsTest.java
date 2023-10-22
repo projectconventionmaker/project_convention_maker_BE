@@ -98,6 +98,8 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
                 fieldWithPath("project_detail.team_name").type(NULL).description("(Nullable) 팀명"),
                 fieldWithPath("project_detail.introduction").type(NULL).description("(Nullable) 프로젝트 한 줄 소개"),
                 fieldWithPath("project_detail.detail").type(NULL).description("(Nullable)  프로젝트 상세"),
+                fieldWithPath("project_detail.project_start").type(NULL).description("(Nullable) 프로젝트 시작 일자"),
+                fieldWithPath("project_detail.project_end").type(NULL).description("(Nullable) 프로젝트 종료 일자"),
                 fieldWithPath("project_detail.teammates").type(NULL).description("(Nullable)  프로젝트 팀원")
         };
 
@@ -155,6 +157,8 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
                 .teamName("Boiler Plate")
                 .introduction("프로젝트 한 줄 소개")
                 .detail("프로젝트 상세 정보")
+                .startAt(LocalDate.now())
+                .endAt(LocalDate.now().plusDays(5))
                 .teammate(teammate)
                 .build());
 
@@ -216,6 +220,8 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
                 fieldWithPath("project_detail.team_name").type(STRING).description("(Nullable) 팀명"),
                 fieldWithPath("project_detail.introduction").type(STRING).description("(Nullable) 프로젝트 한 줄 소개"),
                 fieldWithPath("project_detail.detail").type(STRING).description("(Nullable) 프로젝트 상세"),
+                fieldWithPath("project_detail.project_start").type(STRING).description("(Nullable) 프로젝트 시작 일자"),
+                fieldWithPath("project_detail.project_end").type(STRING).description("(Nullable) 프로젝트 종료 일자"),
                 fieldWithPath("project_detail.teammates").type(ARRAY).description("(Nullable) 프로젝트 팀원"),
                 fieldWithPath("project_detail.teammates[].name").type(STRING).description("(Nullable) 팀원명"),
                 fieldWithPath("project_detail.teammates[].position").type(STRING).description("(Nullable) 팀원 포지션"),
