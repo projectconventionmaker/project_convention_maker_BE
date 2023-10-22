@@ -44,7 +44,7 @@ paths:
                         "detail" : null,
                         "project_name" : "Boiler Plate",
                         "team_name" : null,
-                        "project_uuid" : "5a9629c5-c515-4752-8aeb-34a605cd8a87"
+                        "project_uuid" : "c46b92ac-c9c6-4998-b695-0de6d39cc966"
                       }
                     }
   /api/v1/projects/{projectUUID}:
@@ -94,7 +94,7 @@ paths:
                         "detail" : "프로젝트 상세 설명",
                         "project_name" : "Boiler Plate",
                         "team_name" : "Team name",
-                        "project_uuid" : "5a9629c5-c515-4752-8aeb-34a605cd8a87"
+                        "project_uuid" : "c46b92ac-c9c6-4998-b695-0de6d39cc966"
                       }
                     }
   /api/v1/projects/{projectUUID}/code-conventions:
@@ -225,7 +225,7 @@ paths:
                         "detail" : "프로젝트 상세 설명",
                         "project_name" : "Boiler Plate",
                         "team_name" : "Team name",
-                        "project_uuid" : "5a9629c5-c515-4752-8aeb-34a605cd8a87"
+                        "project_uuid" : "c46b92ac-c9c6-4998-b695-0de6d39cc966"
                       },
                       "commit_convention" : {
                         "items" : [ {
@@ -292,7 +292,7 @@ paths:
                         "detail" : "프로젝트 상세 설명",
                         "project_name" : "Boiler Plate",
                         "team_name" : "Team name",
-                        "project_uuid" : "5a9629c5-c515-4752-8aeb-34a605cd8a87"
+                        "project_uuid" : "c46b92ac-c9c6-4998-b695-0de6d39cc966"
                       },
                       "ground_rule" : {
                         "items" : [ {
@@ -585,6 +585,13 @@ components:
                     example:
                       type: string
                       description: (Required) 얘시
+    CreateProjectRequest:
+      title: CreateProjectRequest
+      type: object
+      properties:
+        project_name:
+          type: string
+          description: (Required) 프로젝트 이름
     UpdateProjectRequest:
       title: UpdateProjectRequest
       type: object
@@ -624,10 +631,3 @@ components:
               type: string
               description: 팀명
           description: 이름
-    CreateProjectRequest:
-      title: CreateProjectRequest
-      type: object
-      properties:
-        project_name:
-          type: string
-          description: (Required) 프로젝트 이름
