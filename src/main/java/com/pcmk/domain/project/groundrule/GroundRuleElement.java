@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class GroundRuleElement {
+
     private String name;
     private boolean checked;
 

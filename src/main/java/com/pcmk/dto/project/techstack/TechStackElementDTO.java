@@ -13,6 +13,7 @@ public class TechStackElementDTO {
 
     @NotBlank
     private String category;
+
     @NotNull
     private List<String> names;
 

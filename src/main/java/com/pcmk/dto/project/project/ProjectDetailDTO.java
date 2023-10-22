@@ -2,6 +2,9 @@ package com.pcmk.dto.project.project;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pcmk.domain.project.ProjectEntity;
+import com.pcmk.dto.project.teammate.TeammateElementDTO;
+import java.util.List;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +26,9 @@ public class ProjectDetailDTO {
 
     private String detail;
 
+    @JsonProperty("teammates")
+    private List<TeammateElementDTO> teammateElementDTOs;
+
     public static ProjectDetailDTO fromEntity(ProjectEntity entity) {
         return ProjectDetailDTO.builder()
                 .entity(entity)
@@ -36,5 +42,15 @@ public class ProjectDetailDTO {
         this.teamName = entity.getTeamName();
         this.introduction = entity.getIntroduction();
         this.detail = entity.getDetail();
+        this.teammateElementDTOs = getTeammates(entity);
+    }
+
+    private List<TeammateElementDTO> getTeammates(ProjectEntity entity) {
+        if (Objects.isNull(entity.getTeammate()) || Objects.isNull(entity.getTeammate().getElements())) {
+            return null;
+        }
+        return entity.getTeammate().getElements().stream()
+                .map(element -> TeammateElementDTO.of(element.getName(), element.getPosition(), element.getLink()))
+                .toList();
     }
 }

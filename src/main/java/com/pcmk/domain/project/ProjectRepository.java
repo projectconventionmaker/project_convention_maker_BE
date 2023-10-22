@@ -9,4 +9,6 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
     boolean existsByProjectName(String projectName);
 
     Optional<ProjectEntity> findByProjectUUID(String uuid);
+
+    Optional<ProjectEntity> findByProjectName(String projectName);
 }

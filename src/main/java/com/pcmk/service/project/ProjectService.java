@@ -2,6 +2,8 @@ package com.pcmk.service.project;
 
 import static com.pcmk.exception.CustomExceptionError.PROJECT_NAME_DUPLICATED;
 import static com.pcmk.exception.CustomExceptionError.PROJECT_NOT_FOUND;
+import static com.pcmk.utils.UUIdUtils.createUUID;
+import static com.pcmk.utils.UUIdUtils.isUUIDFormat;
 
 import com.pcmk.domain.project.ProjectEntity;
 import com.pcmk.domain.project.ProjectRepository;
@@ -13,7 +15,6 @@ import com.pcmk.dto.project.project.ProjectGetResponseDTO;
 import com.pcmk.dto.project.project.ProjectUpdateRequestDTO;
 import com.pcmk.dto.project.techstack.TechStackUpdateRequestDTO;
 import com.pcmk.exception.CustomException;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -25,10 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-
-
-    public ProjectGetResponseDTO getProject(String projectUuid) {
-        ProjectEntity projectEntity = findOrException(projectUuid);
+    
+    public ProjectGetResponseDTO getProject(String projectId) {
+        ProjectEntity projectEntity = findOrException(projectId);
         return ProjectGetResponseDTO.fromEntity(projectEntity);
     }
 
@@ -44,8 +44,8 @@ public class ProjectService {
     }
 
     @Transactional
-    public void updateProject(String projectUuid, ProjectUpdateRequestDTO dto) {
-        ProjectEntity projectEntity = findOrException(projectUuid);
+    public void updateProject(String projectId, ProjectUpdateRequestDTO dto) {
+        ProjectEntity projectEntity = findOrException(projectId);
 
         if (!dto.getProjectName().equals(projectEntity.getProjectName())) {
             ensureProjectNameIsUnique(dto.getProjectName());
@@ -60,32 +60,32 @@ public class ProjectService {
     }
 
     @Transactional
-    public void updateTechStack(String projectUuid,
+    public void updateTechStack(String projectId,
                                 TechStackUpdateRequestDTO dto) {
-        ProjectEntity projectEntity = findOrException(projectUuid);
+        ProjectEntity projectEntity = findOrException(projectId);
         projectEntity.updateTechStack(dto.toEntity());
         projectRepository.save(projectEntity);
     }
 
     @Transactional
-    public void updateGroundRule(String projectUuid, GroundRuleUpdateRequestDTO dto) {
-        ProjectEntity projectEntity = findOrException(projectUuid);
+    public void updateGroundRule(String projectId, GroundRuleUpdateRequestDTO dto) {
+        ProjectEntity projectEntity = findOrException(projectId);
         projectEntity.updateGroundRule(dto.toEntity());
         projectRepository.save(projectEntity);
     }
 
     @Transactional
-    public void updateCommitConvention(String projectUuid,
+    public void updateCommitConvention(String projectId,
                                        CommitConventionUpdateRequestDTO dto) {
-        ProjectEntity projectEntity = findOrException(projectUuid);
+        ProjectEntity projectEntity = findOrException(projectId);
         projectEntity.updateCommitConvention(dto.toEntity());
         projectRepository.save(projectEntity);
     }
 
     @Transactional
-    public void updateCodeConvention(String projectUuid,
+    public void updateCodeConvention(String projectId,
                                      CodeConventionUpdateRequestDTO dto) {
-        ProjectEntity projectEntity = findOrException(projectUuid);
+        ProjectEntity projectEntity = findOrException(projectId);
         projectEntity.updateCodeConvention(dto.toEntity());
         projectRepository.save(projectEntity);
     }
@@ -96,8 +96,13 @@ public class ProjectService {
         }
     }
 
-    private ProjectEntity findOrException(String projectUuid) {
-        return projectRepository.findByProjectUUID(projectUuid)
+    private ProjectEntity findOrException(String projectId) {
+        if (isUUIDFormat(projectId)) {
+            return projectRepository.findByProjectUUID(projectId)
+                    .orElseThrow(() -> new CustomException(PROJECT_NOT_FOUND));
+        }
+
+        return projectRepository.findByProjectName(projectId)
                 .orElseThrow(() -> new CustomException(PROJECT_NOT_FOUND));
     }
 
@@ -106,9 +111,5 @@ public class ProjectService {
                 .projectName(projectName)
                 .projectUUID(createUUID())
                 .build();
-    }
-
-    private String createUUID() {
-        return UUID.randomUUID().toString();
     }
 }

@@ -4,6 +4,7 @@ import com.pcmk.domain.BaseEntity;
 import com.pcmk.domain.project.codeconvention.CodeConvention;
 import com.pcmk.domain.project.commitconvention.CommitConvention;
 import com.pcmk.domain.project.groundrule.GroundRule;
+import com.pcmk.domain.project.teammate.Teammate;
 import com.pcmk.domain.project.techstack.TechStack;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
@@ -12,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,6 +50,16 @@ public class ProjectEntity extends BaseEntity {
     @Column(name = "detail", columnDefinition = "text COMMENT '프로젝트 상세'")
     private String detail;
 
+    @Column(name = "start_at", columnDefinition = "datetime COMMENT '프로젝트 시작 날짜'")
+    private LocalDate startAt;
+
+    @Column(name = "end_at", columnDefinition = "datetime COMMENT '프로젝트 종료 날짜'")
+    private LocalDate endAt;
+
+    @Type(JsonType.class)
+    @Column(name = "teammate", columnDefinition = "json COMMENT '팀메이트'")
+    private Teammate teammate;
+
     @Type(JsonType.class)
     @Column(name = "tech_stack", columnDefinition = "json COMMENT '기술 스택'")
     private TechStack techStack;
@@ -65,12 +77,22 @@ public class ProjectEntity extends BaseEntity {
     private CodeConvention codeConvention;
 
     @Builder
-    private ProjectEntity(String projectName, String teamName, String introduction, String projectUUID, String detail) {
+    private ProjectEntity(String projectName,
+                          String teamName,
+                          String introduction,
+                          String projectUUID,
+                          String detail,
+                          LocalDate startAt,
+                          LocalDate endAt,
+                          Teammate teammate) {
         this.projectName = projectName;
         this.teamName = teamName;
         this.introduction = introduction;
         this.detail = detail;
         this.projectUUID = projectUUID;
+        this.startAt = startAt;
+        this.endAt = endAt;
+        this.teammate = teammate;
     }
 
     public void updateTechStack(TechStack updatedTechStack) {
@@ -94,5 +116,8 @@ public class ProjectEntity extends BaseEntity {
         this.teamName = updatedProjectEntity.getTeamName();
         this.introduction = updatedProjectEntity.getIntroduction();
         this.detail = updatedProjectEntity.getDetail();
+        this.startAt = updatedProjectEntity.getStartAt();
+        this.endAt = updatedProjectEntity.getStartAt();
+        this.teammate = updatedProjectEntity.getTeammate();
     }
 }
