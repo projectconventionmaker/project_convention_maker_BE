@@ -2,7 +2,6 @@ package com.pcmk.dto.project.groundrule;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pcmk.domain.project.ProjectEntity;
-import com.pcmk.domain.project.groundrule.GroundRuleElement;
 import java.util.List;
 import java.util.Objects;
 import lombok.Builder;
@@ -17,12 +16,11 @@ public class GroundRuleDTO {
     List<GroundRuleElementDTO> elementDTOs;
 
     public static GroundRuleDTO fromEntity(ProjectEntity entity) {
-        List<GroundRuleElement> elements = entity.getGroundRule().getElements();
-        if (Objects.isNull(elements)) {
+        if (Objects.isNull(entity.getCodeConvention()) || Objects.isNull(entity.getCodeConvention().getElements())) {
             return null;
         }
 
-        List<GroundRuleElementDTO> elementDTOs = elements.stream()
+        List<GroundRuleElementDTO> elementDTOs = entity.getGroundRule().getElements().stream()
                 .map(element -> GroundRuleElementDTO.of(element.getName(), element.isChecked()))
                 .toList();
 

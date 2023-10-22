@@ -2,7 +2,6 @@ package com.pcmk.dto.project.commitconvention;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pcmk.domain.project.ProjectEntity;
-import com.pcmk.domain.project.commitconvention.CommitConventionElement;
 import java.util.List;
 import java.util.Objects;
 import lombok.Builder;
@@ -17,12 +16,12 @@ public class CommitConventionDTO {
     List<CommitConventionElementDTO> elementDTOs;
 
     public static CommitConventionDTO fromEntity(ProjectEntity entity) {
-        List<CommitConventionElement> elements = entity.getCommitConvention().getElements();
-        if (Objects.isNull(elements)) {
+        if (Objects.isNull(entity.getCommitConvention()) ||
+                Objects.isNull(entity.getCommitConvention().getElements())) {
             return null;
         }
 
-        List<CommitConventionElementDTO> elementDTOs = elements.stream()
+        List<CommitConventionElementDTO> elementDTOs = entity.getCommitConvention().getElements().stream()
                 .map(element -> CommitConventionElementDTO.of(element.getName(), element.isChecked()))
                 .toList();
 
