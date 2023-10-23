@@ -145,9 +145,9 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
 
         //Teammate
         List<TeammateElement> teammateElements = new ArrayList<>();
-        teammateElements.add(TeammateElement.of("name1", "백엔드", "https://www.link.com"));
-        teammateElements.add(TeammateElement.of("name2", "백엔드", "https://www.link.com"));
-        teammateElements.add(TeammateElement.of("name3", "백엔드", "https://www.link.com"));
+        teammateElements.add(TeammateElement.of("id1", "name1", "백엔드", "https://www.link.com"));
+        teammateElements.add(TeammateElement.of("id2", "name2", "백엔드", "https://www.link.com"));
+        teammateElements.add(TeammateElement.of("id3", "name3", "백엔드", "https://www.link.com"));
         Teammate teammate = Teammate.of(teammateElements);
 
         //ProjectDetail
@@ -283,9 +283,9 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
         //given
         //Teammate
         List<TeammateElementDTO> teammateElementDTOs = new ArrayList<>();
-        teammateElementDTOs.add(TeammateElementDTO.of(null, "name1", "백엔드", "https://www.link.com"));
-        teammateElementDTOs.add(TeammateElementDTO.of(null, "name2", "프론트엔드", "https://www.link.com"));
-        teammateElementDTOs.add(TeammateElementDTO.of(null, "name3", "디자이너", "https://www.link.com"));
+        teammateElementDTOs.add(TeammateElementDTO.of("id1", "name1", "백엔드", "https://www.link.com"));
+        teammateElementDTOs.add(TeammateElementDTO.of("id2", "name2", "프론트엔드", "https://www.link.com"));
+        teammateElementDTOs.add(TeammateElementDTO.of("id3", "name3", "디자이너", "https://www.link.com"));
 
         ProjectUpdateRequestDTO request = ProjectUpdateRequestDTO.builder()
                 .projectName("Changed project name")
@@ -309,7 +309,7 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
                 fieldWithPath("project_start").type(ARRAY).description("(Required) 프로젝트 시작 날짜"),
                 fieldWithPath("project_end").type(ARRAY).description("(Required) 프로젝트 종료 날짜"),
                 fieldWithPath("teammates").type(ARRAY).description("(Required) 프로젝트 팀원"),
-                fieldWithPath("teammates[].id").type(NULL).description("(Optional) 팀원 아이디"),
+                fieldWithPath("teammates[].id").type(STRING).description("(Required) 팀원 아이디"),
                 fieldWithPath("teammates[].name").type(STRING).description("(Required) 팀원명"),
                 fieldWithPath("teammates[].position").type(STRING).description("(Required) 팀원 포지션"),
                 fieldWithPath("teammates[].link").type(STRING).description("(Required) 팀원 링크")

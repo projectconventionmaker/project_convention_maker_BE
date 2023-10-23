@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class TeammateElementDTO {
 
+    @NotBlank(message = "팀원 아이디를 입력하세요")
     private String id;
     @NotBlank(message = "팀원 이름을 입력하세요")
     private String name;

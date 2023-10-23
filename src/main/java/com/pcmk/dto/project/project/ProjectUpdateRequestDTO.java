@@ -81,7 +81,8 @@ public class ProjectUpdateRequestDTO {
             return Collections.emptyList();
         }
         return this.teammateElementDTOs.stream()
-                .map(element -> TeammateElement.of(element.getName(), element.getPosition(), element.getLink()))
+                .map(element -> TeammateElement.of(element.getId(), element.getName(), element.getPosition(),
+                        element.getLink()))
                 .toList();
     }
 }
