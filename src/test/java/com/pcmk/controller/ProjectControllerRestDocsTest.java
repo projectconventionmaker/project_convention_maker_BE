@@ -223,6 +223,7 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
                 fieldWithPath("project_detail.project_start").type(ARRAY).description("(Nullable) 프로젝트 시작 일자"),
                 fieldWithPath("project_detail.project_end").type(ARRAY).description("(Nullable) 프로젝트 종료 일자"),
                 fieldWithPath("project_detail.teammates").type(ARRAY).description("(Nullable) 프로젝트 팀원"),
+                fieldWithPath("project_detail.teammates[].id").type(STRING).description("(Nullable) 팀원 아이디"),
                 fieldWithPath("project_detail.teammates[].name").type(STRING).description("(Nullable) 팀원명"),
                 fieldWithPath("project_detail.teammates[].position").type(STRING).description("(Nullable) 팀원 포지션"),
                 fieldWithPath("project_detail.teammates[].link").type(STRING).description("(Nullable) 팀원 링크"),
@@ -282,9 +283,9 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
         //given
         //Teammate
         List<TeammateElementDTO> teammateElementDTOs = new ArrayList<>();
-        teammateElementDTOs.add(TeammateElementDTO.of("name1", "백엔드", "https://www.link.com"));
-        teammateElementDTOs.add(TeammateElementDTO.of("name2", "프론트엔드", "https://www.link.com"));
-        teammateElementDTOs.add(TeammateElementDTO.of("name3", "디자이너", "https://www.link.com"));
+        teammateElementDTOs.add(TeammateElementDTO.of(null, "name1", "백엔드", "https://www.link.com"));
+        teammateElementDTOs.add(TeammateElementDTO.of(null, "name2", "프론트엔드", "https://www.link.com"));
+        teammateElementDTOs.add(TeammateElementDTO.of(null, "name3", "디자이너", "https://www.link.com"));
 
         ProjectUpdateRequestDTO request = ProjectUpdateRequestDTO.builder()
                 .projectName("Changed project name")
@@ -307,10 +308,11 @@ class ProjectControllerRestDocsTest extends AbstractRestDocsTest {
                 fieldWithPath("detail").type(STRING).description("(Required) 프로젝트 세부 설명"),
                 fieldWithPath("project_start").type(ARRAY).description("(Required) 프로젝트 시작 날짜"),
                 fieldWithPath("project_end").type(ARRAY).description("(Required) 프로젝트 종료 날짜"),
-                fieldWithPath("teammates").type(ARRAY).description("(Nullable) 프로젝트 팀원"),
-                fieldWithPath("teammates[].name").type(STRING).description("(Nullable) 팀원명"),
-                fieldWithPath("teammates[].position").type(STRING).description("(Nullable) 팀원 포지션"),
-                fieldWithPath("teammates[].link").type(STRING).description("(Nullable) 팀원 링크")
+                fieldWithPath("teammates").type(ARRAY).description("(Required) 프로젝트 팀원"),
+                fieldWithPath("teammates[].id").type(NULL).description("(Optional) 팀원 아이디"),
+                fieldWithPath("teammates[].name").type(STRING).description("(Required) 팀원명"),
+                fieldWithPath("teammates[].position").type(STRING).description("(Required) 팀원 포지션"),
+                fieldWithPath("teammates[].link").type(STRING).description("(Required) 팀원 링크")
         };
 
         String identifier = "put-v1-update-project";

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class TeammateElementDTO {
 
+    private String id;
     @NotBlank(message = "팀원 이름을 입력하세요")
     private String name;
     @NotBlank(message = "팀원 포지션을 입력하세요")
@@ -16,8 +17,9 @@ public class TeammateElementDTO {
     @NotBlank(message = "링크를 입력하세요")
     private String link;
 
-    public static TeammateElementDTO of(String name, String position, String link) {
+    public static TeammateElementDTO of(String id, String name, String position, String link) {
         return TeammateElementDTO.builder()
+                .id(id)
                 .name(name)
                 .position(position)
                 .link(link)
@@ -25,7 +27,8 @@ public class TeammateElementDTO {
     }
 
     @Builder
-    private TeammateElementDTO(String name, String position, String link) {
+    private TeammateElementDTO(String id, String name, String position, String link) {
+        this.id = id;
         this.name = name;
         this.position = position;
         this.link = link;

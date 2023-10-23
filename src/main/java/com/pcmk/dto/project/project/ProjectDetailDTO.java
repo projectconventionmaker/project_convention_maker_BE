@@ -60,7 +60,8 @@ public class ProjectDetailDTO {
             return Collections.emptyList();
         }
         return entity.getTeammate().getElements().stream()
-                .map(element -> TeammateElementDTO.of(element.getName(), element.getPosition(), element.getLink()))
+                .map(element -> TeammateElementDTO.of(element.getId(), element.getName(), element.getPosition(),
+                        element.getLink()))
                 .toList();
     }
 }

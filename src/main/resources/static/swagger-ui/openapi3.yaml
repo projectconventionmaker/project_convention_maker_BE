@@ -44,7 +44,7 @@ paths:
                         "detail" : null,
                         "project_name" : "Boiler Plate",
                         "team_name" : null,
-                        "project_uuid" : "eb187d80-9529-4db2-9904-b93c09f900ee",
+                        "project_uuid" : "7bfc365c-91ad-45e6-8e8d-6a1505c9d623",
                         "project_start" : null,
                         "project_end" : null,
                         "teammates" : [ ]
@@ -81,18 +81,21 @@ paths:
                         "detail" : "프로젝트 상세 정보",
                         "project_name" : "Boiler Plate",
                         "team_name" : "Boiler Plate",
-                        "project_uuid" : "eb187d80-9529-4db2-9904-b93c09f900ee",
+                        "project_uuid" : "7bfc365c-91ad-45e6-8e8d-6a1505c9d623",
                         "project_start" : [ 2023, 10, 23 ],
                         "project_end" : [ 2023, 10, 28 ],
                         "teammates" : [ {
+                          "id" : "2a2bf2b6-e103-498a-95e6-049cb3afa6f0",
                           "name" : "name1",
                           "position" : "백엔드",
                           "link" : "https://www.link.com"
                         }, {
+                          "id" : "c934703b-bea3-44c7-8c8f-7a88cd7243f7",
                           "name" : "name2",
                           "position" : "백엔드",
                           "link" : "https://www.link.com"
                         }, {
+                          "id" : "3761e99a-5a22-4584-b773-57d796c3e769",
                           "name" : "name3",
                           "position" : "백엔드",
                           "link" : "https://www.link.com"
@@ -179,14 +182,17 @@ paths:
                     "project_start" : [ 2023, 10, 23 ],
                     "project_end" : [ 2023, 10, 28 ],
                     "teammates" : [ {
+                      "id" : null,
                       "name" : "name1",
                       "position" : "백엔드",
                       "link" : "https://www.link.com"
                     }, {
+                      "id" : null,
                       "name" : "name2",
                       "position" : "프론트엔드",
                       "link" : "https://www.link.com"
                     }, {
+                      "id" : null,
                       "name" : "name3",
                       "position" : "디자이너",
                       "link" : "https://www.link.com"
@@ -401,44 +407,55 @@ components:
               type: string
               description: 프로젝트명
           description: 이름
-    UpdateCommitConventionRequest:
-      title: UpdateCommitConventionRequest
+    UpdateProjectRequest:
+      title: UpdateProjectRequest
       type: object
       properties:
-        code_conventions:
+        teammates:
           type: array
-          description: (Required) 커밋 컨벤션 항목
+          description: (Required) 프로젝트 팀원
           items:
             type: object
             properties:
+              link:
+                type: string
+                description: (Required) 팀원 링크
               name:
                 type: string
-                description: (Required) 항목 이름
-              checked:
-                type: boolean
-                description: (Required) 항목이 채택되었는지
-    UpdateTechStackRequest:
-      title: UpdateTechStackRequest
-      type: object
-      properties:
-        tech_stack:
-          type: array
-          description: (Required) 테크 스택 리스트
-          items:
-            type: object
-            properties:
-              names:
-                type: array
-                description: (Required) 기술 이름
-                items:
-                  oneOf:
-                  - type: object
-                  - type: boolean
-                  - type: string
-                  - type: number
-              category:
+                description: (Required) 팀원명
+              position:
                 type: string
-                description: (Required) 스택 카테고리
+                description: (Required) 팀원 포지션
+        project_start:
+          type: array
+          description: (Required) 프로젝트 시작 날짜
+          items:
+            oneOf:
+            - type: object
+            - type: boolean
+            - type: string
+            - type: number
+        project_end:
+          type: array
+          description: (Required) 프로젝트 종료 날짜
+          items:
+            oneOf:
+            - type: object
+            - type: boolean
+            - type: string
+            - type: number
+        detail:
+          type: string
+          description: (Required) 프로젝트 세부 설명
+        project_name:
+          type: string
+          description: (Required) 프로젝트명
+        introduction:
+          type: string
+          description: (Required) 프로젝트 한 줄 짧은 소개
+        team_name:
+          type: string
+          description: (Required) 팀 이름
     GetProjectResponse:
       title: GetProjectResponse
       type: object
@@ -527,6 +544,9 @@ components:
                   position:
                     type: string
                     description: (Nullable) 팀원 포지션
+                  id:
+                    type: string
+                    description: (Nullable) 팀원 아이디
             project_start:
               type: array
               description: (Nullable) 프로젝트 시작 일자
@@ -574,13 +594,44 @@ components:
                     type: boolean
                     description: (Nullable) 항목이 채택되었는지
           description: (Nullable) 커밋 컨벤션
-    CreateProjectRequest:
-      title: CreateProjectRequest
+    UpdateCommitConventionRequest:
+      title: UpdateCommitConventionRequest
       type: object
       properties:
-        project_name:
-          type: string
-          description: (Required) 프로젝트명
+        code_conventions:
+          type: array
+          description: (Required) 커밋 컨벤션 항목
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: (Required) 항목 이름
+              checked:
+                type: boolean
+                description: (Required) 항목이 채택되었는지
+    UpdateTechStackRequest:
+      title: UpdateTechStackRequest
+      type: object
+      properties:
+        tech_stack:
+          type: array
+          description: (Required) 테크 스택 리스트
+          items:
+            type: object
+            properties:
+              names:
+                type: array
+                description: (Required) 기술 이름
+                items:
+                  oneOf:
+                  - type: object
+                  - type: boolean
+                  - type: string
+                  - type: number
+              category:
+                type: string
+                description: (Required) 스택 카테고리
     UpdateCodeConventionRequest:
       title: UpdateCodeConventionRequest
       type: object
@@ -606,52 +657,10 @@ components:
                     example:
                       type: string
                       description: (Required) 예시
-    UpdateProjectRequest:
-      title: UpdateProjectRequest
+    CreateProjectRequest:
+      title: CreateProjectRequest
       type: object
       properties:
-        teammates:
-          type: array
-          description: (Nullable) 프로젝트 팀원
-          items:
-            type: object
-            properties:
-              link:
-                type: string
-                description: (Nullable) 팀원 링크
-              name:
-                type: string
-                description: (Nullable) 팀원명
-              position:
-                type: string
-                description: (Nullable) 팀원 포지션
-        project_start:
-          type: array
-          description: (Required) 프로젝트 시작 날짜
-          items:
-            oneOf:
-            - type: object
-            - type: boolean
-            - type: string
-            - type: number
-        project_end:
-          type: array
-          description: (Required) 프로젝트 종료 날짜
-          items:
-            oneOf:
-            - type: object
-            - type: boolean
-            - type: string
-            - type: number
-        detail:
-          type: string
-          description: (Required) 프로젝트 세부 설명
         project_name:
           type: string
           description: (Required) 프로젝트명
-        introduction:
-          type: string
-          description: (Required) 프로젝트 한 줄 짧은 소개
-        team_name:
-          type: string
-          description: (Required) 팀 이름
